@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Play with JavaScript!</title>
+        <meta name="description" content="Simple interface for learning basic JavaScript by laying out scenery">
+        <meta name="author" content="Gavin Davies <gavin.davies@boxuk.com>">
+        <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="lib/codemirror-3.1/lib/codemirror.css" rel="stylesheet">
+        <link href="css/jscene.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container">
+            <header class="jumbotron subhead" id="overview">
+                <div class="navbar">
+                    <div class="navbar-inner">
+                        <ul class="nav nav-pills">
+                            <li><a href="#" id="reset" title="If you want to scrap everything you've done, click here">Reset</a></li>
+                            <li><a href="#" id="oneIMadeEarlier" title="A predefined drawing so you can see an example">One I made earlier</a></li>
+                        </ul>
+                        <div class="pull-right">
+                            Scene Creator by Box UK
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <section id="typography">
+                <div class="row-fluid">
+                    <div class="span12">
+                        <table width="100%" cellpadding="2" cellspacing="0">
+                            <tr><td width="10"></td>
+                                <td valign="top">
+
+
+                                        <div class="btn-group pull-right" id="tipGroup">
+                                            <button id="btnHowTo" title="If you're not sure what to do, or you'd like some ideas, press this button!" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="icon-question-sign icon-white"></i> How to...<span class="caret"></span></button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#" id="btnMakeItNighttime" title="Not a daytime person? No problem! Make it dark!">Make it nighttime</a></li>
+                                                <li><a href="#" id="btnShowMoon" title="How to show the moon in the corner of the screen">Show the moon</a></li>
+                                                <li><a href="#" id="btnShowSun" title="How to show the sun in the corner of the screen">Show the sun</a></li>
+                                                <li><a href="#" id="btnPlantTree" title="Plant a tree anywhere you like!">Plant a tree</a></li>
+                                                <li><a href="#" id="btnPlantRowOfTrees" title="Plant a whole row of trees">Plant a row of trees</a></li>
+                                            </ul>
+                                        </div><!-- /btn-group -->
+                                        <h2>Tips and tools</h2>
+                                        <div id="panelTipsAndTools">
+
+
+                                            <div id="helpText">
+                                                <div id="introText">
+                                                    <p>Welcome to Scene Creator! This
+                                                tool teaches you about programming
+                                                and allows you to build scenes
+                                                using snippets of code.</p>
+                                                    <p>This area here is where the tips and hints will go! Look over here any time you're stuck!</p>
+                                                </div>
+
+                                                <button id="btnReady" class="btn btn-large btn-success">OK, got it! <i class="icon-chevron-right icon-white"></i></button>
+                                            </div>
+                                        <div id="help">
+                                            <p><small>Here is some example code showing how to do that.</small></p>
+                                            <pre id="sampleCode" class="prettyprint linenums">
+// sample code here
+                                            </pre>
+
+                                            <br/><button class="btn btn-warning" id="btnShowMe" title="Click this if you're not sure how to do something. It will type in the code for you!">Show me how! <i class="icon-chevron-right icon-white"></i></button>
+
+                                            <button class="btn btn-success" id="btnMoreInfo" title="Press this for more detailed information on a topic and more ideas for what you can do with it">What else can I do? <i class="icon-chevron-right icon-white"></i></button>
+
+                                        </div>
+                                    </div>
+                                </td>
+                                <td width="10"></td>
+                                <td width="500" valign="top">
+                                    <h2>Your code</h2>
+                                    <div id="panelYourCode">
+
+                                    <textarea id="code" name="code">
+// your code goes here!
+// Any lines that start with // are ignored
+
+// let's make it a sunny day. Try removing all this text!
+showSun();
+                                    </textarea></div></td>
+                                <td valign="top" width="420">
+                                    <h2>Your scene</h2>
+                                    <div  id="panelYourScene">
+                                        <iframe id="preview"></iframe>
+                                        <div id="yourSceneInfo">
+                                            <button id="btnReady2" class="btn btn-large btn-success"><i class="icon-chevron-left icon-white"></i>OK, got it!</button>
+
+                                            The panel above is what you are creating
+                                            with your code. Whene you change code,
+                                            look over here and see what happened!
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+        <script src="lib/jquery/jquery-1.9.1.min.js"></script>
+        <script src="lib/codemirror-3.1/lib/codemirror.js"></script>
+        <script src="lib/codemirror-3.1/mode/javascript/javascript.js"></script>
+        <script src="lib/codemirror-3.1/addon/edit/matchbrackets.js"></script>
+        <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+
+        <script src="js/jscene.js"></script>
+    </body>
+</html>

@@ -1,0 +1,48 @@
+.container {
+    width: 100%
+}
+iframe {
+    width: 430px;
+    height: 330px;
+    border: 0;
+}
+#code {
+    width: 500px;
+
+}
+.CodeMirror {
+    max-width: 500px;
+    width: 500px;
+}
+#sampleCode {
+    margin-top: 5px;
+}
+#help {
+    display: none;
+    margin-top: 10px;
+}
+#helpText {
+    margin-bottom: 10px;
+}
+.inlineCode {
+    font-family: Monaco, Menlo, Consolas, "Courier New", monos
+}
+.pull-right {
+    margin-top: 10px;
+    color: #AAA;
+    font-style: italic;
+}
+#tipGroup {
+    margin-top: 17px;
+}
+
+#panelTipsAndTools, #panelYourCode, #panelYourScene, #btnHowTo {
+    display: none;
+}
+#btnReady2 {
+    float: left;
+    margin-right: 5px;
+}
+#yourSceneInfo {
+    width: 410px;
+}

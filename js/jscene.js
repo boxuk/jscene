@@ -31,8 +31,8 @@ $(function() {
                 + "<html>\n"
                 + "<body style=\"padding:0;margin:0;\">\n"
                 + "  <canvas id=\"pane\" width=\"400\" height=\"300\"></canvas>\n"
-                + "  <script type=\"text/javascript\" src=\"js/jscene-iframe.js\"></script>\n"
-                + "  <script type=\"text/javascript\">"
+                + "  <script type=\"text/javascript\" defer=\"defer\" src=\"js/jscene-iframe.js\"></script>\n"
+                + "  <script type=\"text/javascript\" defer=\"defer\">"
                 + javascript
                 + "\n</script>\n"
                 + "</body>\n"

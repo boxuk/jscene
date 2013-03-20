@@ -1,4 +1,4 @@
-/* global alert, confirm, unescape */
+/*global alert, confirm, unescape*/
 
 // This file contains the tutorial part of Scene Creator - it handles updating
 // the iframe preview and showing tips to the user

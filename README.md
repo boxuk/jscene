@@ -24,3 +24,10 @@ Libraries
  * Twitter Bootstrap (of course!)
  * CodeMirror for code editing
  * jQuery for interactivity
+
+Browser support
+===============
+
+Tested primarily in Chrome and IE9 and IE10.
+
+Will not work in IE8 or below as it uses Canvas.

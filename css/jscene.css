@@ -50,3 +50,16 @@ iframe {
 button, .btn {
     cursor: pointer;
 }
+#code-invalid, #code-valid {
+    display: none;
+}
+
+.progress {
+    margin-top: 10px;
+    width: 300px;
+    margin-bottom: 0;
+}
+#progressLabel {
+     margin-top:10px;
+     margin-right:10px;
+}

@@ -6,6 +6,7 @@
 
 // how wide is the scree?
 var SCREEN_WIDTH = 400;
+var SCREEN_HEIGHT = 300;
 
 // set up the drawing elements and draw a basic background
 var canvas = document.getElementById('pane');
@@ -21,6 +22,15 @@ grassGrad.addColorStop(1, '#a5c956');
 context.fillStyle = grassGrad;
 context.fillRect(0, 150, SCREEN_WIDTH, 300);
 
+var testConditions = {
+    'ballInSky': null,
+    'timeOfDay': 'day',
+    'treesPlanted': 0,
+    'treePlantedAt100200': false,
+    'valid': false // set in wrapper function in jscene.js.
+                   // this is only set if the script appears to be syntax error free
+};
+
 // here are the custom functions!
 
 /**
@@ -31,12 +41,13 @@ context.fillRect(0, 150, SCREEN_WIDTH, 300);
  */
 function setTimeOfDay(time) {
     if(time === 'night') {
-      var skyGrad = context.createLinearGradient(0,0,0,150);
-      skyGrad.addColorStop(0, '#000000');
-      skyGrad.addColorStop(1, '#222222');
-      context.fillStyle = skyGrad;
-      context.fillRect(0, 0, SCREEN_WIDTH, 150);
+        var skyGrad = context.createLinearGradient(0,0,0,150);
+        skyGrad.addColorStop(0, '#000000');
+        skyGrad.addColorStop(1, '#222222');
+        context.fillStyle = skyGrad;
+        context.fillRect(0, 0, SCREEN_WIDTH, 150);
     }
+    testConditions.timeOfDay = time;
 }
 
 /**
@@ -66,6 +77,9 @@ function plantTree(left, top) {
     context.lineWidth = 5;
     context.strokeStyle = '#003300';
     context.stroke();
+
+    testConditions.treePlantedAt100200 = (left === 100 && top === 200);
+    testConditions.treesPlanted++;
 }
 
 /**
@@ -81,6 +95,8 @@ function showBallInSky(colour) {
     context.arc(SCREEN_WIDTH, 0, radius, 0, 2 * Math.PI, false);
     context.fillStyle = colour;
     context.fill();
+
+    testConditions.ballInSky = colour;
 }
 
 /**

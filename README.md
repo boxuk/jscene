@@ -18,9 +18,22 @@ It isn't a full-on tutorial, it's designed to give people a taster of coding.
 More advanced users might be able to figure out how it's all done, and might even
 unlock the secret code!
 
+Usage
+-----
+
+It's simply HTML. Put it anywhere on a web server and it should all just work
+when you browse to it.
+
 Libraries
 =========
 
  * Twitter Bootstrap (of course!)
  * CodeMirror for code editing
  * jQuery for interactivity
+
+Browser support
+===============
+
+Tested primarily in Chrome and IE9 and IE10.
+
+Will not work in IE8 or below as it uses Canvas.

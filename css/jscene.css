@@ -46,3 +46,7 @@ iframe {
 #yourSceneInfo {
     width: 410px;
 }
+
+button, .btn {
+    cursor: pointer;
+}

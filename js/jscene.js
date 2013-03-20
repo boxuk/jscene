@@ -7,6 +7,21 @@
 $(function() {
     var delay;
 
+    function getInternetExplorerVersion()
+    // Returns the version of Internet Explorer or a -1
+    // (indicating the use of another browser).
+    {
+      var rv = -1; // Return value assumes failure.
+      if (navigator.appName == 'Microsoft Internet Explorer')
+      {
+        var ua = navigator.userAgent;
+        var re  = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
+        if (re.exec(ua) != null)
+          rv = parseFloat( RegExp.$1 );
+      }
+      return rv;
+    }
+
     function updatePreview() {
         var previewFrame = document.getElementById('preview');
         var preview = previewFrame.contentDocument || previewFrame.contentWindow.document;
@@ -27,16 +42,25 @@ $(function() {
     });
 
     function wrap(javascript) {
-        return "<!doctype html>\n"
+        var s = "<!doctype html>\n"
                 + "<html>\n"
                 + "<body style=\"padding:0;margin:0;\">\n"
-                + "  <canvas id=\"pane\" width=\"400\" height=\"300\"></canvas>\n"
-                + "  <script type=\"text/javascript\" defer=\"defer\" src=\"js/jscene-iframe.js\"></script>\n"
-                + "  <script type=\"text/javascript\" defer=\"defer\">"
-                + javascript
-                + "\n</script>\n"
-                + "</body>\n"
+                + "  <canvas id=\"pane\" width=\"400\" height=\"300\"></canvas>\n";
+        if(getInternetExplorerVersion() === 9) {
+            s += "  <script type=\"text/javascript\" defer=\"defer\" src=\"js/jscene-iframe.js\"></script>\n"
+              + "  <script type=\"text/javascript\" defer=\"defer\">"
+              + javascript
+              + "\n</script>\n";
+        } else {
+            s += "  <script type=\"text/javascript\" src=\"js/jscene-iframe.js\"></script>\n"
+              + "  <script type=\"text/javascript\">"
+              + javascript
+              + "\n</script>\n";
+        }
+
+        s += "</body>\n"
                 + "</html>\n";
+        return s;
     }
 
     setTimeout(updatePreview, 300);

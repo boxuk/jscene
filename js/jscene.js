@@ -12,22 +12,15 @@ $(function() {
     // (indicating the use of another browser).
     {
       var rv = -1; // Return value assumes failure.
-      if (navigator.appName == 'Microsoft Internet Explorer')
+      if (navigator.appName === 'Microsoft Internet Explorer')
       {
         var ua = navigator.userAgent;
         var re  = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
-        if (re.exec(ua) != null)
+        if (re.exec(ua) != null) {
           rv = parseFloat( RegExp.$1 );
+        }
       }
       return rv;
-    }
-
-    function updatePreview() {
-        var previewFrame = document.getElementById('preview');
-        var preview = previewFrame.contentDocument || previewFrame.contentWindow.document;
-        preview.open();
-        preview.write(wrap(editor.getValue()));
-        preview.close();
     }
 
     // Initialize CodeMirror editor with a nice html5 canvas demo.
@@ -35,10 +28,6 @@ $(function() {
         lineNumbers: true,
         matchBrackets: true,
         tabMode: 'indent'
-    });
-    editor.on("change", function() {
-        clearTimeout(delay);
-        delay = setTimeout(updatePreview, 300);
     });
 
     function wrap(javascript) {
@@ -62,6 +51,19 @@ $(function() {
                 + "</html>\n";
         return s;
     }
+
+    function updatePreview() {
+        var previewFrame = document.getElementById('preview');
+        var preview = previewFrame.contentDocument || previewFrame.contentWindow.document;
+        preview.open();
+        preview.write(wrap(editor.getValue()));
+        preview.close();
+    }
+
+    editor.on("change", function() {
+        clearTimeout(delay);
+        delay = setTimeout(updatePreview, 300);
+    });
 
     setTimeout(updatePreview, 300);
 

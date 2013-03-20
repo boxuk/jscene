@@ -220,6 +220,7 @@ $(function() {
 
     if(window && window.localStorage && window.localStorage.getItem && window.localStorage.getItem('tutorial') === 'done') {
         $('#panelTipsAndTools, #panelYourScene, #panelYourCode').show();
+        $('#btnReady, #btnReady2').hide();
     } else {
         $('#panelTipsAndTools').fadeIn(400, function() {
             $('#btnReady').click(function() {

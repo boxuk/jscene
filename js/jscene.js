@@ -89,7 +89,7 @@
     setUpTip({
         id: '#btnPlantTree',
         helpText: 'You can plant a tree by <b>calling</b> the <b class="inlineCode">plantTree</b> function. You can tell the computer WHERE to plant the tree by using the parameters of plantTree.<br/><br/>The first parameter is how many pixels from the LEFT of the screen. The second parameter is how many pixels from the TOP of the screen (Cartesian co-ordinates).',
-        sampleCode: "// plant a tree 100 pixels from the left\n// and 200 pixels from the top\nplantTree(130, 100);\n",
+        sampleCode: "// plant a tree 130 pixels from the left\n// and 100 pixels from the top\nplantTree(130, 100);\n",
         moreInfoFunction: function() {
             $('#helpText').html('The function <span class="inlineCode">plantTree</span>'
                 + ' take two <b>arguments</b> also known as <b>parameters</b>. They are both <b>integers</b> which means "whole numbers". You can plant as many as you like - the function can be called as often as you want.');

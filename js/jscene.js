@@ -176,7 +176,7 @@ $(function() {
         title: 'Random trees',
         helpText: '<div class="alert alert-success">Can you work out how to make tree placement more random?</div>'
                     + '<div class="alert alert-info">We use a <b>constant</b>, <span class="inlineCode">SCREEN_WIDTH</span>, so we don\'t have to write \'400\' every time we want to specify the width of the viewport. This is called <b>avoiding magic numbers</b> - magic is not good in programming! We like things to be clear!<br/><br/>'
-                    + ' You could try doing a few things like adjust the number of trees to plan, or'
+                    + ' You could try doing a few things like adjust the number of trees to plant, or'
                     + ' adjusting the distance of each tree from the top. Here, we\'ve randomised them.',
         sampleCode: "// plant a row of trees"
                     + "\nvar treesToPlant = 7;"

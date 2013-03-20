@@ -12,6 +12,8 @@ iframe {
 }
 .CodeMirror {
     max-width: 500px;
+}
+.lt-ie9 .CodeMirror {
     width: 500px;
 }
 #sampleCode {

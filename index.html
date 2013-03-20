@@ -15,8 +15,12 @@
                 <div class="navbar">
                     <div class="navbar-inner">
                         <ul class="nav nav-pills">
-                            <li><a href="#" id="reset" title="If you want to scrap everything you've done, click here">Reset</a></li>
-                            <li><a href="#" id="oneIMadeEarlier" title="A predefined drawing so you can see an example">One I made earlier</a></li>
+                            <li id="progressLabel">Progress</li>
+                            <li>
+                                <div class="progress">
+                                    <div class="bar" style="width: 0%;"></div>
+                                 </div>
+                            </li>
                         </ul>
                         <div class="pull-right">
                             Scene Creator by Box UK
@@ -52,7 +56,7 @@
                                             </div>
                                         <div id="help">
                                             <p><small>Here is some example code showing how to do that.</small></p>
-                                            <pre id="sampleCode" class="prettyprint linenums">
+                                            <pre id="sampleCode" title="Sample code is shown here. The code is often close to, but not EXACTLY, the answer you're looking for, so you'll need to think carefully about it!">
 // sample code here
                                             </pre>
 
@@ -78,9 +82,10 @@
 // let's make it a sunny day. Try removing all this text!
 showSun();
 </textarea>
-                                    <span id="code-valid" class="label label-success"><i class="icon-ok icon-white"></i>Code is valid</span>
-                                    <span id="code-invalid" class="label label-warning"><i class="icon-remove icon-white"></i>Code is invalid</span>
-
+                                    <center>
+                                        <span id="code-valid" class="label label-success" title="This means that your code is valid JavaScript. Good show!"><i class="icon-ok icon-white"></i>Code is valid</span>
+                                        <span id="code-invalid" class="label label-warning" title="This means that your code is not valid JavaScript so we can't render your scene at the moment."><i class="icon-remove icon-white"></i>Code is invalid</span>
+                                    </center>
                                     </div></td>
                                 <td valign="top" width="420">
                                     <h2>Your scene</h2>

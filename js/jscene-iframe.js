@@ -6,6 +6,7 @@
 
 // how wide is the scree?
 var SCREEN_WIDTH = 400;
+var SCREEN_HEIGHT = 300;
 
 // set up the drawing elements and draw a basic background
 var canvas = document.getElementById('pane');
@@ -25,7 +26,9 @@ var testConditions = {
     'ballInSky': null,
     'timeOfDay': 'day',
     'treesPlanted': 0,
-    'treePlantedAt100200': false
+    'treePlantedAt100200': false,
+    'valid': false // set in wrapper function in jscene.js.
+                   // this is only set if the script appears to be syntax error free
 };
 
 // here are the custom functions!

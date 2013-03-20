@@ -218,23 +218,30 @@ $(function() {
                 + "}");
     });
 
-    $('#panelTipsAndTools').fadeIn(400, function() {
-        $('#btnReady').click(function() {
-            $('#btnReady').fadeOut();
-            $('#panelYourScene').fadeIn(400, function() {
-                $('#btnReady2').click(function() {
-                    $('#yourSceneInfo').fadeOut();
-                    editor.refresh();
-                    $('#panelYourCode').fadeIn(400, function() {
+    if(window && window.localStorage && window.localStorage.getItem && window.localStorage.getItem('tutorial') === 'done') {
+        $('#panelTipsAndTools, #panelYourScene, #panelYourCode').show();
+    } else {
+        $('#panelTipsAndTools').fadeIn(400, function() {
+            $('#btnReady').click(function() {
+                $('#btnReady').fadeOut();
+                $('#panelYourScene').fadeIn(400, function() {
+                    $('#btnReady2').click(function() {
+                        $('#yourSceneInfo').fadeOut();
                         editor.refresh();
+                        $('#panelYourCode').fadeIn(400, function() {
+                            editor.refresh();
 
-                        $('#introText').fadeOut(400, function() {
-                            $('#introText').html('The button above will help you get started!');
-                            $('#btnHowTo, #introText').fadeIn();
+                            $('#introText').fadeOut(400, function() {
+                                $('#introText').html('The button above will help you get started!');
+                                $('#btnHowTo, #introText').fadeIn();
+                                if(window && window.localStorage && window.localStorage.setItem) {
+                                     window.localStorage.setItem('tutorial', 'done');
+                                }
+                            });
                         });
                     });
                 });
             });
         });
-    });
+    }
 });

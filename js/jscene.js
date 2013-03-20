@@ -1,42 +1,48 @@
-//$(function() {
+/* global alert, confirm, unescape */
+
+// This file contains the tutorial part of Scene Creator - it handles updating
+// the iframe preview and showing tips to the user
+//
+
+$(function() {
     var delay;
+
+    function updatePreview() {
+        var previewFrame = document.getElementById('preview');
+        var preview = previewFrame.contentDocument || previewFrame.contentWindow.document;
+        preview.open();
+        preview.write(wrap(editor.getValue()));
+        preview.close();
+    }
 
     // Initialize CodeMirror editor with a nice html5 canvas demo.
     var editor = CodeMirror.fromTextArea(document.getElementById('code'), {
-      //mode: 'text/html',
-      lineNumbers: true,
-      matchBrackets: true,
-      tabMode: 'indent'
+        lineNumbers: true,
+        matchBrackets: true,
+        tabMode: 'indent'
     });
     editor.on("change", function() {
-      clearTimeout(delay);
-      delay = setTimeout(updatePreview, 300);
+        clearTimeout(delay);
+        delay = setTimeout(updatePreview, 300);
     });
 
     function wrap(javascript) {
         return "<!doctype html>\n"
-            + "<html>\n"
-            + "<body style=\"padding:0;margin:0;\">\n"
-            + "  <canvas id=\"pane\" width=\"400\" height=\"300\"></canvas>\n"
-            + "  <script type=\"text/javascript\" src=\"js/jscene-iframe.js\"></script>\n"
-            + "  <script type=\"text/javascript\">"
-            + javascript
-            + "\n</script>\n"
-            + "</body>\n"
-            + "</html>\n";
+                + "<html>\n"
+                + "<body style=\"padding:0;margin:0;\">\n"
+                + "  <canvas id=\"pane\" width=\"400\" height=\"300\"></canvas>\n"
+                + "  <script type=\"text/javascript\" src=\"js/jscene-iframe.js\"></script>\n"
+                + "  <script type=\"text/javascript\">"
+                + javascript
+                + "\n</script>\n"
+                + "</body>\n"
+                + "</html>\n";
     }
 
-    function updatePreview() {
-      var previewFrame = document.getElementById('preview');
-      var preview =  previewFrame.contentDocument ||  previewFrame.contentWindow.document;
-      preview.open();
-      preview.write(wrap(editor.getValue()));
-      preview.close();
-    }
     setTimeout(updatePreview, 300);
 
     $('#reset').click(function() {
-        if(!confirm('Are you sure? This will clear all your work.')) {
+        if (!confirm('Are you sure? This will clear all your work.')) {
             return;
         }
 
@@ -68,7 +74,7 @@
 
     var infoOnCelestialBodies = function() {
         $('#helpText').html('The functions <span class="inlineCode">showSun</span> and <span class="inlineCode">showMoon</span> are'
-            + ' actually a <b>wrapper</b> around the function <span class="inlineCode">showBallInSky</span> that passes a <b>parameter</b> in to tell it what colour to draw the ball. You could make the sun any colour you like! Wrapper functions are great for <b>composing functionality</b> - making something complicated out of lots of simple things.');
+                + ' actually a <b>wrapper</b> around the function <span class="inlineCode">showBallInSky</span> that passes a <b>parameter</b> in to tell it what colour to draw the ball. You could make the sun any colour you like! Wrapper functions are great for <b>composing functionality</b> - making something complicated out of lots of simple things.');
 
         $('#sampleCode').html("// show a red ball\nshowBallInSky('red');\n");
     };
@@ -92,7 +98,7 @@
         sampleCode: "// plant a tree 130 pixels from the left\n// and 100 pixels from the top\nplantTree(130, 100);\n",
         moreInfoFunction: function() {
             $('#helpText').html('The function <span class="inlineCode">plantTree</span>'
-                + ' take two <b>arguments</b> also known as <b>parameters</b>. They are both <b>integers</b> which means "whole numbers". You can plant as many as you like - the function can be called as often as you want.');
+                    + ' take two <b>arguments</b> also known as <b>parameters</b>. They are both <b>integers</b> which means "whole numbers". You can plant as many as you like - the function can be called as often as you want.');
 
             $('#sampleCode').html("plantTree(40, 150);\nplantTree(20, 170);\nplantTree(240, 110);\n");
         }
@@ -102,22 +108,22 @@
         id: '#btnPlantRowOfTrees',
         helpText: 'You can use a <span class="inlineCode">for</span> loop and a little bit of simple maths to draw a row of trees.',
         sampleCode: "// plant a row of trees"
-            + "\nvar treesToPlant = 4;"
-            + "\nfor (var i = 0; i < SCREEN_WIDTH; i++) {"
-            + "\n    var left = (i * (SCREEN_WIDTH / treesToPlant));"
-            + "\n    plantTree(left, 180)"
-            + "\n}\n",
+                + "\nvar treesToPlant = 4;"
+                + "\nfor (var i = 0; i < SCREEN_WIDTH; i++) {"
+                + "\n    var left = (i * (SCREEN_WIDTH / treesToPlant));"
+                + "\n    plantTree(left, 180)"
+                + "\n}\n",
         moreInfoFunction: function() {
             $('#helpText').html('We use a <b>constant</b>, <span class="inlineCode">SCREEN_WIDTH</span>, so we don\'t have to write \'400\' every time we want to specify the width of the viewport. This is called <b>avoiding magic numbers</b> - magic is not good in programming! We like things to be clear!<br/><br/>'
-                + ' You could try doing a few things like adjust the number of trees to plan, or'
-                + ' adjusting the distance of each tree from the top. Here, we\'ve randomised them. Can you work out how to make it more random?');
+                    + ' You could try doing a few things like adjust the number of trees to plan, or'
+                    + ' adjusting the distance of each tree from the top. Here, we\'ve randomised them. Can you work out how to make it more random?');
 
             $('#sampleCode').html("// plant a row of trees"
-            + "\nvar treesToPlant = 10;"
-            + "\nfor (var i = 0; i < SCREEN_WIDTH; i++) {"
-            + "\n    var left = (i * (SCREEN_WIDTH / treesToPlant));"
-            + "\n    plantTree(left, 150 + Math.floor(Math.random() * 30));"
-            + "\n}\n");
+                    + "\nvar treesToPlant = 10;"
+                    + "\nfor (var i = 0; i < SCREEN_WIDTH; i++) {"
+                    + "\n    var left = (i * (SCREEN_WIDTH / treesToPlant));"
+                    + "\n    plantTree(left, 150 + Math.floor(Math.random() * 30));"
+                    + "\n}\n");
         }
     });
 
@@ -129,13 +135,13 @@
             $('#helpText').html('Under the hood, the <span class="inlineCode">setTimeOfDate</span> function uses something called the <a target="_BLANK" href="http://www.html5canvastutorials.com/">canvas</a>. You can draw onto this canvas in a variety of ways!<br/><br/>Get your Google on and work out how to change the sky colour gradients! You can draw anything on a Canvas!');
 
             $('#sampleCode').html("var grad = context.createLinearGradient(0,0,0,150);"
-            + "\ngrad.addColorStop(0, '#000000');"
-            + "\ngrad.addColorStop(0.2, '#00CC00');"
-            + "\ngrad.addColorStop(0.5, '#0000CC');"
-            + "\ngrad.addColorStop(0.8, '#CC0000');"
-            + "\ngrad.addColorStop(1, '#222222');"
-            + "\ncontext.fillStyle = grad;"
-            + "\ncontext.fillRect(0, 0, SCREEN_WIDTH, 150);\n");
+                    + "\ngrad.addColorStop(0, '#000000');"
+                    + "\ngrad.addColorStop(0.2, '#00CC00');"
+                    + "\ngrad.addColorStop(0.5, '#0000CC');"
+                    + "\ngrad.addColorStop(0.8, '#CC0000');"
+                    + "\ngrad.addColorStop(1, '#222222');"
+                    + "\ncontext.fillStyle = grad;"
+                    + "\ncontext.fillRect(0, 0, SCREEN_WIDTH, 150);\n");
         }
     });
 
@@ -144,46 +150,46 @@
 
     $('#btnShowMe').click(function() {
 
-        if(++showMeCount === SHOW_MES_BEFORE_WARN) {
+        if (++showMeCount === SHOW_MES_BEFORE_WARN) {
             alert("You've used the 'Show me how!' button " + showMeCount
-                + " times now - you will probably learn more if you type the"
-                + " code in! It's up to you, we won't nag you again! :-)");
+                    + " times now - you will probably learn more if you type the"
+                    + " code in! It's up to you, we won't nag you again! :-)");
         }
 
         var val = null;
         try {
             val = $('#sampleCode')[0].textContent;
         }
-        catch(e) {
+        catch (e) {
             val = $('#sampleCode').html();
         }
         editor.setValue(editor.getValue() + "\n" + unescape(val));
     });
 
     $('#oneIMadeEarlier').click(function() {
-        if(!confirm('Are you sure? This will clear all your work.')) {
+        if (!confirm('Are you sure? This will clear all your work.')) {
             return;
         }
 
         editor.setValue(
-        "// Here is one that we've filled out already. Play around\n"
-        + "// with it and see what you can come up with!\n\n"
-        + "// Make it night time\n"
-        + "setTimeOfDay('night');\n"
-        + "\n"
-        + "// show the sun\n"
-        + "showSun();\n"
-        + "\n"
-        + "// plant a tree 100 pixels from the left\n"
-        + "// and 200 pixels from the top\n"
-        + "plantTree(130, 100);\n"
-        + "\n"
-        + "// plant a row of trees\n"
-        + "var treesToPlant = 4;\n"
-        + "for (var i = 0; i < SCREEN_WIDTH; i++) {\n"
-        + "    var left = (i * (SCREEN_WIDTH / treesToPlant));\n"
-        + "    plantTree(left, 180)\n"
-        + "}");
+                "// Here is one that we've filled out already. Play around\n"
+                + "// with it and see what you can come up with!\n\n"
+                + "// Make it night time\n"
+                + "setTimeOfDay('night');\n"
+                + "\n"
+                + "// show the sun\n"
+                + "showSun();\n"
+                + "\n"
+                + "// plant a tree 100 pixels from the left\n"
+                + "// and 200 pixels from the top\n"
+                + "plantTree(130, 100);\n"
+                + "\n"
+                + "// plant a row of trees\n"
+                + "var treesToPlant = 4;\n"
+                + "for (var i = 0; i < SCREEN_WIDTH; i++) {\n"
+                + "    var left = (i * (SCREEN_WIDTH / treesToPlant));\n"
+                + "    plantTree(left, 180)\n"
+                + "}");
     });
 
     $('#panelTipsAndTools').fadeIn(400, function() {
@@ -205,4 +211,4 @@
             });
         });
     });
-//});
+});

@@ -1,5 +1,5 @@
-// jscene-iframe.js
-//
+/* global alert */
+
 // This file contains the predefined functions that people can call and play
 // around with. The idea is that people get comfortable using functions then they
 // can start writing functions of their own!

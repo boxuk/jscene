@@ -242,11 +242,21 @@ $(function() {
     }
 
     var tipPtr = -1;
+    var finishShown = false;
     function setTip() {
         var config = tips[tipPtr];
         showTip(config);
 
-        $('.bar').css('width', (100 * tipPtr/(tips.length - 1)) + '%');
+        var perc = (100 * tipPtr/(tips.length - 1));
+        $('.bar').css('width', perc + '%');
+        if(!finishShown && perc === 100) {
+            finishShown = true;
+            $("#finishScreen").modal('show');
+            setTimeout(function() {
+                copySampleToLive();
+            }, 600);
+
+        }
 
         if(tipPtr <= 0) {
             $('#controls').hide();
@@ -275,14 +285,7 @@ $(function() {
     var showMeCount = 0;
     var SHOW_MES_BEFORE_WARN = 4;
 
-    $('#btnShowMe').click(function() {
-
-        if (++showMeCount === SHOW_MES_BEFORE_WARN) {
-            alert("You've used the 'Show me how!' button " + showMeCount
-                    + " times now - you will probably learn more if you type the"
-                    + " code in! It's up to you, we won't nag you again! :-)");
-        }
-
+    function copySampleToLive() {
         var val = null;
         try {
             val = $('#sampleCode')[0].textContent;
@@ -291,6 +294,17 @@ $(function() {
             val = $('#sampleCode').html();
         }
         editor.setValue(editor.getValue() + "\n" + unescape(val));
+    }
+
+    $('#btnShowMe').click(function() {
+
+        if (++showMeCount === SHOW_MES_BEFORE_WARN) {
+            alert("You've used the 'Show me how!' button " + showMeCount
+                    + " times now - you will probably learn more if you type the"
+                    + " code in! It's up to you, we won't nag you again! :-)");
+        }
+
+        copySampleToLive();
     });
 
     if(window && window.localStorage && window.localStorage.getItem && window.localStorage.getItem('tutorial') === 'done') {

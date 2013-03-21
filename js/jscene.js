@@ -255,6 +255,7 @@ $(function() {
                 $("#finishScreen")
                     .modal('show')
                     .on('hide', function() {
+                        editor.setValue('');
                         copySampleToLive();
                     });
             }, 1000);

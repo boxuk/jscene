@@ -44,7 +44,7 @@ $(function() {
               + "  <script type=\"text/javascript\"> try {\n"
               + javascript;
         }
-        s += "\n    testConditions.valid = true;\n} catch(e) { console.log('Error in script ' + e); }\n";
+        s += "\n    testConditions.valid = true;\n} catch(e) {  }\n";
         s += "\nwindow.onload = function () {"
         + "\n    window.parent.repaintListener(testConditions);"
         + "\n};\n"

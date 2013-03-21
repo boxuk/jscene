@@ -220,6 +220,8 @@ $(function() {
         }
     }];
 
+    var tipPtr = -1;
+
     function showTip(config) {
         showInHelpBox(function() {
             $('#puzzleTitle').html((tipPtr+1) + ": " + config.title);
@@ -241,7 +243,21 @@ $(function() {
         });
     }
 
-    var tipPtr = -1;
+    var showMeCount = 0;
+    var SHOW_MES_BEFORE_WARN = 4;
+
+    function copySampleToLive() {
+        var val = null;
+        try {
+            val = $('#sampleCode')[0].textContent;
+        }
+        catch (e) {
+            val = $('#sampleCode').html();
+        }
+        editor.setValue(editor.getValue() + "\n" + unescape(val));
+    }
+
+
     var finishShown = false;
     function setTip() {
         var config = tips[tipPtr];
@@ -285,20 +301,6 @@ $(function() {
 
     window.nextTip = nextTip; // TODO remove
 
-    var showMeCount = 0;
-    var SHOW_MES_BEFORE_WARN = 4;
-
-    function copySampleToLive() {
-        var val = null;
-        try {
-            val = $('#sampleCode')[0].textContent;
-        }
-        catch (e) {
-            val = $('#sampleCode').html();
-        }
-        editor.setValue(editor.getValue() + "\n" + unescape(val));
-    }
-
     $('#btnShowMe').click(function() {
 
         if (++showMeCount === SHOW_MES_BEFORE_WARN) {
@@ -315,7 +317,7 @@ $(function() {
         $('#btnReady, #btnReady2').hide();
         $('#btnHowTo').fadeIn();
         editor.refresh();
-        nextTip()
+        nextTip();
     } else {
         $('#panelTipsAndTools').fadeIn(400, function() {
             $('#btnReady').click(function() {
@@ -352,7 +354,6 @@ $(function() {
         }
 
         if(!testConditions.valid) {
-            console.log("Invalid script");
             $('#code-valid').hide();
             $('#code-invalid').show();
             return;

@@ -251,11 +251,13 @@ $(function() {
         $('.bar').css('width', perc + '%');
         if(!finishShown && perc === 100) {
             finishShown = true;
-            $("#finishScreen").modal('show');
             setTimeout(function() {
-                copySampleToLive();
-            }, 600);
-
+                $("#finishScreen")
+                    .modal('show')
+                    .on('hide', function() {
+                        copySampleToLive();
+                    });
+            }, 1000);
         }
 
         if(tipPtr <= 0) {

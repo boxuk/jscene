@@ -204,7 +204,7 @@ $(function() {
         id: '#btnMakeItNighttimeAdvanced',
         title: 'Using Canvas',
         helpText: '<div class="alert alert-success">Can you change the colours? Can you add more colour stops?</div>'
-            + '<div class="alert alert-info">Under the hood, the <span class="inlineCode">setTimeOfDate</span> function'
+            + '<div class="alert alert-info">Under the hood, the <span class="inlineCode">setTimeOfDay</span> function'
             + ' uses something called the <a target="_BLANK" href="http://www.html5canvastutorials.com/">canvas</a>.'
             + ' You can draw onto this canvas in a variety of ways!<br/><br/>Get your Google on and work out how to change the sky colour gradients! You can draw anything on a Canvas!</div>',
         sampleCode: "var grad = context.createLinearGradient(0, 0, 0, SCREEN_HEIGHT);"

@@ -3,12 +3,28 @@
 // This file contains the tutorial part of Scene Creator - it handles updating
 // the iframe preview and showing tips to the user
 //
+// This file is included in the main window and is not included in the
+// iframe that shows the preview
 
+/* jScene scene creator */
+
+// Wrap the code in a closure. This isolates it and means it doesn't
+// make a mess in the browser's memory by creating lots of global functions
 $(function() {
+
+    // A timer function - when the user writes some code, the preview window is
+    // updated, but only once the user has stopped typing. This is why we use
+    // a delay.
     var delay;
 
-    // Returns the version of Internet Explorer or a -1
-    // (indicating the use of another browser).
+    // Function that is used to work out if the user is on Internet Explorer,
+    // which is the most problematic of web browsers! If they are, we have
+    // to do a couple of things slightly differently.
+
+    /**
+     * Returns the version of Internet Explorer or a -1
+     * @returns {int} Version of IE, or -1 if browser is not IE
+     */
     function getInternetExplorerVersion() {
         var rv = -1; // Return value assumes failure.
         if (navigator.appName === 'Microsoft Internet Explorer') {
@@ -22,36 +38,71 @@ $(function() {
         return rv;
     }
 
-    // Initialize CodeMirror editor with a nice html5 canvas demo.
+    // Initialize CodeMirror editor - turn on bracket matching and line numbers
+    // and set the tab mode to indentation.
+    //
+    // This takes the HTML element with id "code" and turns it into a code
+    // editor.
     var editor = CodeMirror.fromTextArea(document.getElementById('code'), {
         lineNumbers: true,
         matchBrackets: true,
         tabMode: 'indent'
     });
 
-    function wrap(javascript) {
+    // Function that takes a block of code and turns it into a whole 'page' by
+    // 'wrapping' it in HTML. This means that the code the user inputs gets
+    // wrapped up into a complete web page which is then shown in the preview
+    // iframe.
+
+    /**
+     * Take a block of JavaScript code, which has already been validated, and
+     * wrap it up in an HTML page
+     *
+     * @param {string} userCode The javascript code to put into the iframe
+     * @returns {String} The value of "javascript" wrapped up in a complete HTML
+     * document, ready for display in the iframe
+     */
+    function wrap(userCode) {
+        // Create a variable s that will contain all the HTML. Start it off by
+        // adding an HTML document header and drawing a canvas.
         var s = "<!doctype html>\n"
                 + "<html>\n"
                 + "<body style=\"padding:0;margin:0;\">\n"
                 + "  <canvas id=\"pane\" width=\"400\" height=\"300\"></canvas>\n";
+
+        // On Internet Explorer 9, we have to defer the loading of the JavaScript.
+        // This probably warrants further investigation!
         if(getInternetExplorerVersion() === 9) {
             s += "  <script type=\"text/javascript\" defer=\"defer\" src=\"js/jscene-iframe.js\"></script>\n"
-              + "  <script type=\"text/javascript\" defer=\"defer\">try {\n"
-              + javascript;
+              + "  <script type=\"text/javascript\" defer=\"defer\">try {\n";
         } else {
             s += "  <script type=\"text/javascript\" src=\"js/jscene-iframe.js\"></script>\n"
-              + "  <script type=\"text/javascript\"> try {\n"
-              + javascript;
+              + "  <script type=\"text/javascript\"> try {\n";
         }
+
+        // Add the user's javascript to our variable
+        s += userCode;
+
+        // If the code is valid, set testConditions.valid to true - see [jscene-iframe.js
+        // for more information on this
         s += "\n    testConditions.valid = true;\n} catch(e) {  }\n";
+
+        // When the iframe loads, it should call the repaint listener and tell
+        // the code in jscene.js "hey, here are the test conditions" so that
+        // the code can work out whether to advance to the next exercise or not
         s += "\nwindow.onload = function () {"
         + "\n    window.parent.repaintListener(testConditions);"
         + "\n};\n"
-        + "\n</script>\n";
-        s += "</body>\n"
-                + "</html>\n";
+        + "</script>\n"
+        + "</body>\n"
+        + "</html>\n";
+
+        // Return the complete HTML ready to be put into the preview iframe
         return s;
     }
+
+    // Function that updates the preview iframe if the user's code seems to
+    // be valid
 
     /**
      * If the code the user has entered is valid JavaScript, then execute it,
@@ -60,18 +111,27 @@ $(function() {
      * @returns {null}
      */
     function updatePreview() {
+
+        // Get the code that the user has written
         var newCode = editor.getValue();
 
+        // Have a go at parsing that code. Is it valid code?
         try {
             new Function(newCode);
+            // If the code is valid, show a code valid sign
             $('#code-valid').show();
             $('#code-invalid').hide();
         } catch(e) {
+            // If the code is not valid, show a code invalid sign and don't
+            // update the preview window
             $('#code-valid').hide();
             $('#code-invalid').show();
+
+            // leave the function
             return;
         }
 
+        // Update the code in the preview iframe, which draws the user's work
         var previewFrame = document.getElementById('preview');
         var preview = previewFrame.contentDocument || previewFrame.contentWindow.document;
         preview.open();
@@ -79,31 +139,55 @@ $(function() {
         preview.close();
     }
 
+    // When the user writes new code, update the preview window after a delay
+    // of 300ms
     editor.on("change", function() {
         clearTimeout(delay);
         delay = setTimeout(updatePreview, 300);
     });
 
+    // After a delay of 300ms, call the updatePreview function to draw the initial
+    // scene
     setTimeout(updatePreview, 300);
 
-    function showInHelpBox(f) {
+    // Function that hides then updates then shows the help box. You pass in your
+    // own function (you can pass functions to functions in JavaScript! It's very
+    // powerful to be able to do this) and this function is run and then the help
+    // box is shown.
+
+    /**
+     * Slide the help box up then call function f then slide the help box down
+     *
+     * @param {function} fnToRun The function to run once the help box is hidden,
+     * run before the help box is shown again.
+     *
+     * @returns {null}
+     */
+    function showInHelpBox(fnToRun) {
         $('#help').slideUp(200, function() {
-            f();
+            fnToRun();
             $('#help').slideDown();
         });
     }
 
-    var tips = [{
-        id: '#btnClearOut',
+    // Define a set of exercices in a JSONish format (it's JSON but it has comments!)
+    // These are the jobs that the user must do and the criteria to progress through them
+    var exercices = [{
+        // An exercise - can the user delete all the code?
+        // Set the title of this exercise
         title: 'A fresh start',
+        // Set the text that comes up when this exercise is in play
         helpText: '<div class="alert alert-success">Can you delete all the code in the box on the right?</div>',
+        // Set the sample code to show for this exercise
         sampleCode: "// no code needed! Simply clear out the code in the box on the right\n",
+        // Set a function to be run to check whether this exercise has been completed.
+        // If this function returns true, then we can pass on to the next exercise!
         testConditions: function(config) {
             return config.ballInSky === null
                 && config.timeOfDay === 'day';
         }
     }, {
-        id: '#btnShowSun',
+        // An exercise - this one tests to see if the user can make the sun shine
         title: 'Sun shine',
         helpText: '<div class="alert alert-success">Can you show the sun?</div>'
         +  '<div class="alert alert-info">You can show the sun by calling the <span class="inlineCode">showSun</span> function that has already been defined for you.</div>',
@@ -113,7 +197,7 @@ $(function() {
                 && config.timeOfDay === 'day';
         }
     },{
-        id: '#btnShowMoon',
+        // An exercise - this one tests to see if the user can show the moon
         title: 'Moon time!',
         helpText: '<div class="alert alert-success">Can you show the moon?</div>'
             + '<div class="alert alert-info">You can show the moon by calling the <span class="inlineCode">showMoon</span> function that has already been defined for you.</div>'
@@ -124,7 +208,8 @@ $(function() {
                 && config.timeOfDay === 'day';
         }
     },{
-        id: '#btnShowSunAdvanced',
+        // An exercise - this one tests to see if the user can show green sunshine
+        // by editing parameters of a function
         title: 'Green sunshine',
         helpText: '<div class="alert alert-success">Can you turn the sun green?</div>'
                 + '<div class="alert alert-info">The functions <span class="inlineCode">showSun</span> and <span class="inlineCode">showMoon</span> are'
@@ -136,7 +221,8 @@ $(function() {
                 && config.timeOfDay === 'day';
         }
     },{
-        id: '#btnPlantTree',
+        // An exercise - this one tests to see if the user can show plant a tree
+        // at a certain location
         title: 'Plant a tree',
         helpText: '<div class="alert alert-success">Can you plan a tree 100 pixels from the left and 200 pixels from the top?</div>'
             + '<div class="alert alert-info">You can plant a tree by <b>calling</b> the <b class="inlineCode">plantTree</b> function. You can tell the computer WHERE to plant the tree by using the parameters of plantTree.<br/><br/>The first parameter is how many pixels from the LEFT of the screen. The second parameter is how many pixels from the TOP of the screen (Cartesian co-ordinates).</div>',
@@ -145,7 +231,8 @@ $(function() {
             return config.treesPlanted > 0 && config.treePlantedAt100200;
         }
     },{
-        id: '#btnPlantTreeAdvanced',
+        // An exercise - this one tests to see if the user can show plant 5 trees
+        // by calling a function multiple times
         title: 'Plant 5 trees',
         helpText: '<div class="alert alert-success">Can you plant 5 trees?</div>'
             + '<div class="alert alert-info">The function <span class="inlineCode">plantTree</span>'
@@ -156,7 +243,7 @@ $(function() {
             return config.treesPlanted === 5;
         }
     },{
-        id: '#btnPlantRowOfTrees',
+        // An exercise - can the user draw multiple trees in a loop?
         title: 'Loopy for trees',
         helpText: '<div class="alert alert-success">Can you plant 10 trees using a loop?</div>'
                 + '<div class="alert alert-info">You can use a <span class="inlineCode">for</span> loop and a little bit of simple maths to draw a row of trees.'
@@ -168,10 +255,13 @@ $(function() {
                 + "\n    plantTree(left, 180)"
                 + "\n}\n",
         testConditions: function(config) {
+            // Note that the test conditions are not sophisticated enough to truly
+            // detect that a loop has been used. In the interests of keeping the code
+            // light, we didn't go too far with that
             return config.treesPlanted === 10;
         }
     },{
-        id: '#btnPlantRowOfTreesAdvanced',
+        // An exercise - can the user employ and adjust randomness?
         title: 'Random trees',
         helpText: '<div class="alert alert-success">Can you work out how to make tree placement more random?</div>'
                     + '<div class="alert alert-info">We use a <b>constant</b>, <span class="inlineCode">SCREEN_WIDTH</span>, so we don\'t have to write \'400\' every time we want to specify the width of the viewport. This is called <b>avoiding magic numbers</b> - magic is not good in programming! We like things to be clear!<br/><br/>'
@@ -185,10 +275,13 @@ $(function() {
                     + "\n    plantTree(left, 150 + Math.floor(Math.random() * randomness));"
                     + "\n}\n",
         testConditions: function(config) {
+            // Note that the test conditions are not sophisticated enough to truly
+            // detect that randomness has been used. In the interests of keeping the code
+            // light, we didn't go too far with that
             return config.treesPlanted === 7;
         }
     },{
-        id: '#btnMakeItNighttime',
+        // An exercise - can the user make it night time?
         title: 'Make it night time!',
         helpText: '<div class="alert alert-success">Can you make it dark?</div>'
             + '<div class="alert alert-info"> You can make it night time by <b>calling</b> the <b>function</b> <span class="inlineCode">setTimeOfDay</span> and <b>passing in</b> the <b>parameter</b> \'night\'.</div>'
@@ -200,7 +293,7 @@ $(function() {
             return config.timeOfDay === 'night';
         }
     },{
-        id: '#btnMakeItNighttimeAdvanced',
+        // Free play - let the user loose on Canvas!
         title: 'Using Canvas',
         helpText: '<div class="alert alert-success">Can you change the colours? Can you add more colour stops?</div>'
             + '<div class="alert alert-info">Under the hood, the <span class="inlineCode">setTimeOfDay</span> function'
@@ -219,32 +312,12 @@ $(function() {
         }
     }];
 
-    var tipPtr = -1;
-
-    function showTip(config) {
-        showInHelpBox(function() {
-            $('#puzzleTitle').html((tipPtr+1) + ": " + config.title);
-            $('#btnMoreInfo').show();
-            $('#helpText').html(config.helpText);
-            $('#sampleCode').html(config.sampleCode);
-            $('#btnMoreInfo').click(function() {
-                showInHelpBox(function() {
-                    $('#btnMoreInfo').hide();
-                    config.moreInfoFunction();
-                });
-            });
-        });
-    }
-
-    for (var i = 0; i < tips.length; i++) {
-        $(tips[i].id).click(function() {
-            showTip(tips[i]);
-        });
-    }
+    // number that refers to the position in the exercies array that the user
+    // is currently on
+    var exercisePtr = -1;
 
     var showMeCount = 0;
     var SHOW_MES_BEFORE_WARN = 4;
-
     function copySampleToLive() {
         var val = null;
         try {
@@ -256,15 +329,43 @@ $(function() {
         editor.setValue(editor.getValue() + "\n" + unescape(val));
     }
 
-
+    // Has the finish screen been shown?
     var finishShown = false;
-    function setTip() {
-        var config = tips[tipPtr];
-        showTip(config);
 
-        var perc = (100 * tipPtr/(tips.length - 1));
+    // Function that renders the current exercise, and update the progress meter
+
+    /**
+     * render the current exercise, and update the progress meter
+     *
+     * @returns {null}
+     */
+    function updateExercise() {
+
+        // get the configuration of the current exercise
+        var config = exercices[exercisePtr];
+
+        // draw the current exercise
+        showInHelpBox(function() {
+            $('#puzzleTitle').html((exercisePtr+1) + ": " + config.title);
+            $('#btnMoreInfo').show();
+            $('#helpText').html(config.helpText);
+            $('#sampleCode').html(config.sampleCode);
+            $('#btnMoreInfo').click(function() {
+                showInHelpBox(function() {
+                    $('#btnMoreInfo').hide();
+                    config.moreInfoFunction();
+                });
+            });
+        });
+
+        // Update the progress bar
+        var perc = (100 * exercisePtr/(exercices.length - 1));
         $('.bar').css('width', perc + '%');
+
+        // Check to see if the user finished all the exercises
         if(!finishShown && perc === 100) {
+            // After a brief delay, show the "finished" screen, if it's never
+            // been shown before
             finishShown = true;
             setTimeout(function() {
                 $("#finishScreen")
@@ -276,48 +377,78 @@ $(function() {
             }, 1000);
         }
 
-        if(tipPtr <= 0) {
+        // Show the back and forth controls only if the first exercise is complete.
+        if(exercisePtr <= 0) {
+            // Hide back/forth controls if user is on the first exercise
             $('#controls').hide();
-        } else if(tipPtr === 1) {
+        } else if(exercisePtr === 1) {
+            // Show back control if user is on the second exercise
             $('#controls').fadeIn();
-        }else {
+        } else {
+            // Show controls if user is beyond the second exercise
             $('#controls').show();
         }
     }
 
-    function nextTip() {
-        if(tipPtr < (tips.length - 1)) {
-            ++tipPtr;
+    // Function that advances the exercise the user is looking at. Symmetric to prevExercise
+
+    /**
+     * advance the exercise the user is looking at. Symmetric to prevExercise
+     * @returns {null}
+     */
+    function nextExercise() {
+        // If we're not at the end of the exercise list, then go to the next
+        // exercise
+        if(exercisePtr < (exercices.length - 1)) {
+            ++exercisePtr;
         }
-        setTip();
-    }
-    function prevTip() {
-        if(tipPtr > 0) {
-            tipPtr--;
-        }
-        setTip();
+        updateExercise();
     }
 
-    window.nextTip = nextTip; // TODO remove
+    // Function that regresses the exercise the user is looking at. Symmetric to nextExercise
 
+    /**
+     * regress the exercise the user is looking at. Symmetric to nextExercise
+     * @returns {null}
+     */
+    function prevExercise() {
+        // If we're not at the start of the exercise list, then go to the next
+        // exercise
+        if(exercisePtr > 0) {
+            exercisePtr--;
+        }
+        updateExercise();
+    }
+
+    // Use jQuery to wire up the "show me" back button to copy sample code into
+    // the user's code editor in the middle pane
     $('#btnShowMe').click(function() {
-
+        // If the user seems to be using this functionality a lot, s/he might
+        // not learn as well, so pop up an alert to this effect
         if (++showMeCount === SHOW_MES_BEFORE_WARN) {
             alert("You've used the 'Show me how!' button " + showMeCount
                     + " times now - you will probably learn more if you type the"
                     + " code in! It's up to you, we won't nag you again! :-)");
         }
 
+        // Copy the code from the coding sample on the leftmost pane into the
+        // code editor in the central pane
         copySampleToLive();
     });
 
+    // Check to see if the tutorial is complete. If so, don't bother showing it
     if(window && window.localStorage && window.localStorage.getItem && window.localStorage.getItem('tutorial') === 'done') {
+        // Show the main panels
         $('#panelTipsAndTools, #panelYourScene, #panelYourCode').show();
-        $('#btnReady, #btnReady2').hide();
-        $('#btnHowTo').fadeIn();
+        // Hide the info on Your scene
+        $('#yourSceneInfo').hide();
+        // update the code display
         editor.refresh();
-        nextTip();
+        // show the first tip
+        nextExercise();
     } else {
+        // The tutorial hasn't been run, so run the user through a quick tutorial
+        // OK, this code here is a bit hideous and needs refactoring!
         $('#panelTipsAndTools').fadeIn(400, function() {
             $('#btnReady').click(function() {
                 $('#btnReady').fadeOut();
@@ -334,7 +465,7 @@ $(function() {
                                 if(window && window.localStorage && window.localStorage.setItem) {
                                      window.localStorage.setItem('tutorial', 'done');
                                 }
-                                nextTip();
+                                nextExercise();
                             });
                         });
                     });
@@ -343,23 +474,43 @@ $(function() {
         });
     }
 
+    // Use jQuery to wire up the back button to call the prevTip function
     $('#btnBack').click(function() {
-        prevTip();
+        prevExercise();
     });
 
+    // Function that is called from jscene-iframe.js. It is on the "window"
+    // object so that it is global - it can be accessed outside of this closure.
+
+    /**
+     * @param {object} testConditions The collection to test against the current
+     * exercise's testConditions function
+     * @returns {null}
+     */
     window.repaintListener = function(testConditions) {
-        if(tipPtr < 0) {
+
+        // If we are not on an exercise, don't do anything
+        if(exercisePtr < 0) {
             return;
         }
 
+        // If the code the user has entered isn't valid, simply show the code
+        // invalid badge and do nothing.
         if(!testConditions.valid) {
             $('#code-valid').hide();
             $('#code-invalid').show();
             return;
         }
 
-        if(tips[tipPtr].testConditions(testConditions)) {
-            nextTip();
+        // If the user has passed the test, then advance to the next tip.
+        if(exercices[exercisePtr].testConditions(testConditions)) {
+            nextExercise();
         }
     };
+
+
+    // Make the nextTip function globally accessible. This is useful for debugging
+    // so, for example, you can call nextTip(); in the browser console to skip
+    // an exercise.
+    window.nextTip = nextExercise;
 });

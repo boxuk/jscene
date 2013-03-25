@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>jscene.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="jscene-iframe.html">
+                jscene-iframe.js
+              </a>
+            
+              
+              <a class="source" href="jscene.html">
+                jscene.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>jscene.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="comment">/*global alert, confirm, unescape*/</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>This file contains the tutorial part of Scene Creator - it handles updating
+the iframe preview and showing tips to the user</p>
+<p>This file is included in the main window and is not included in the
+iframe that shows the preview</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="comment">/* jScene scene creator */</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Wrap the code in a closure. This isolates it and means it doesn&#39;t
+make a mess in the browser&#39;s memory by creating lots of global functions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>$(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>A timer function - when the user writes some code, the preview window is
+updated, but only once the user has stopped typing. This is why we use
+a delay.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> delay;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Function that is used to work out if the user is on Internet Explorer,
+which is the most problematic of web browsers! If they are, we have
+to do a couple of things slightly differently.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="comment">/**
+     * Returns the version of Internet Explorer or a -1
+     * @returns {int} Version of IE, or -1 if browser is not IE
+     */</span>
+    <span class="function"><span class="keyword">function</span> <span class="title">getInternetExplorerVersion</span><span class="params">()</span> {</span>
+        <span class="keyword">var</span> rv = -<span class="number">1</span>; <span class="comment">// Return value assumes failure.</span>
+        <span class="keyword">if</span> (navigator.appName === <span class="string">'Microsoft Internet Explorer'</span>) {
+            <span class="keyword">var</span> ua = navigator.userAgent;
+            <span class="keyword">var</span> re  = <span class="keyword">new</span> RegExp(<span class="regexp">/MSIE ([0-9]{1,}[\.0-9]{0,})/</span>);
+            <span class="keyword">if</span> (re.exec(ua) !== <span class="literal">null</span>) {
+                rv = parseFloat( RegExp.$<span class="number">1</span> );
+            }
+        }
+
+        <span class="keyword">return</span> rv;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Initialize CodeMirror editor - turn on bracket matching and line numbers
+and set the tab mode to indentation.</p>
+<p>This takes the HTML element with id &quot;code&quot; and turns it into a code
+editor.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> editor = CodeMirror.fromTextArea(document.getElementById(<span class="string">'code'</span>), {
+        lineNumbers: <span class="literal">true</span>,
+        matchBrackets: <span class="literal">true</span>,
+        tabMode: <span class="string">'indent'</span>
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Function that takes a block of code and turns it into a whole &#39;page&#39; by
+&#39;wrapping&#39; it in HTML. This means that the code the user inputs gets
+wrapped up into a complete web page which is then shown in the preview
+iframe.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="comment">/**
+     * Take a block of JavaScript code, which has already been validated, and
+     * wrap it up in an HTML page
+     *
+     * @param {string} userCode The javascript code to put into the iframe
+     * @returns {String} The value of "javascript" wrapped up in a complete HTML
+     * document, ready for display in the iframe
+     */</span>
+    <span class="function"><span class="keyword">function</span> <span class="title">wrap</span><span class="params">(userCode)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Create a variable s that will contain all the HTML. Start it off by
+adding an HTML document header and drawing a canvas.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">var</span> s = <span class="string">"&lt;!doctype html&gt;\n"</span>
+                + <span class="string">"&lt;html&gt;\n"</span>
+                + <span class="string">"&lt;body style=\"padding:0;margin:0;\"&gt;\n"</span>
+                + <span class="string">"  &lt;canvas id=\"pane\" width=\"400\" height=\"300\"&gt;&lt;/canvas&gt;\n"</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>On Internet Explorer 9, we have to defer the loading of the JavaScript.
+This probably warrants further investigation!</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span>(getInternetExplorerVersion() === <span class="number">9</span>) {
+            s += <span class="string">"  &lt;script type=\"text/javascript\" defer=\"defer\" src=\"js/jscene-iframe.js\"&gt;&lt;/script&gt;\n"</span>
+              + <span class="string">"  &lt;script type=\"text/javascript\" defer=\"defer\"&gt;try {\n"</span>;
+        } <span class="keyword">else</span> {
+            s += <span class="string">"  &lt;script type=\"text/javascript\" src=\"js/jscene-iframe.js\"&gt;&lt;/script&gt;\n"</span>
+              + <span class="string">"  &lt;script type=\"text/javascript\"&gt; try {\n"</span>;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Add the user&#39;s javascript to our variable</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        s += userCode;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>If the code is valid, set testConditions.valid to true - see [jscene-iframe.js
+for more information on this</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        s += <span class="string">"\n    testConditions.valid = true;\n} catch(e) {  }\n"</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>When the iframe loads, it should call the repaint listener and tell
+the code in jscene.js &quot;hey, here are the test conditions&quot; so that
+the code can work out whether to advance to the next exercise or not</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        s += <span class="string">"\nwindow.onload = function () {"</span>
+        + <span class="string">"\n    window.parent.repaintListener(testConditions);"</span>
+        + <span class="string">"\n};\n"</span>
+        + <span class="string">"&lt;/script&gt;\n"</span>
+        + <span class="string">"&lt;/body&gt;\n"</span>
+        + <span class="string">"&lt;/html&gt;\n"</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Return the complete HTML ready to be put into the preview iframe</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">return</span> s;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Function that updates the preview iframe if the user&#39;s code seems to
+be valid</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="comment">/**
+     * If the code the user has entered is valid JavaScript, then execute it,
+     * otherwise, simply return
+     *
+     * @returns {null}
+     */</span>
+    <span class="function"><span class="keyword">function</span> <span class="title">updatePreview</span><span class="params">()</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Get the code that the user has written</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">var</span> newCode = editor.getValue();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Have a go at parsing that code. Is it valid code?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">try</span> {
+            <span class="keyword">new</span> Function(newCode);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>If the code is valid, show a code valid sign</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            $(<span class="string">'#code-valid'</span>).show();
+            $(<span class="string">'#code-invalid'</span>).hide();
+        } <span class="keyword">catch</span>(e) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>If the code is not valid, show a code invalid sign and don&#39;t
+update the preview window</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            $(<span class="string">'#code-valid'</span>).hide();
+            $(<span class="string">'#code-invalid'</span>).show();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>leave the function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">return</span>;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Update the code in the preview iframe, which draws the user&#39;s work</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">var</span> previewFrame = document.getElementById(<span class="string">'preview'</span>);
+        <span class="keyword">var</span> preview = previewFrame.contentDocument || previewFrame.contentWindow.document;
+        preview.open();
+        preview.write(wrap(newCode));
+        preview.close();
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>When the user writes new code, update the preview window after a delay
+of 300ms</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    editor.on(<span class="string">"change"</span>, <span class="keyword">function</span>() {
+        clearTimeout(delay);
+        delay = setTimeout(updatePreview, <span class="number">300</span>);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>After a delay of 300ms, call the updatePreview function to draw the initial
+scene</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    setTimeout(updatePreview, <span class="number">300</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Function that hides then updates then shows the help box. You pass in your
+own function (you can pass functions to functions in JavaScript! It&#39;s very
+powerful to be able to do this) and this function is run and then the help
+box is shown.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="comment">/**
+     * Slide the help box up then call function f then slide the help box down
+     *
+     * @param {function} fnToRun The function to run once the help box is hidden,
+     * run before the help box is shown again.
+     *
+     * @returns {null}
+     */</span>
+    <span class="function"><span class="keyword">function</span> <span class="title">showInHelpBox</span><span class="params">(fnToRun)</span> {</span>
+        $(<span class="string">'#help'</span>).slideUp(<span class="number">200</span>, <span class="keyword">function</span>() {
+            fnToRun();
+            $(<span class="string">'#help'</span>).slideDown();
+        });
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Define a set of exercices in a JSONish format (it&#39;s JSON but it has comments!)
+These are the jobs that the user must do and the criteria to progress through them</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> exercices = [{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>An exercise - can the user delete all the code?
+Set the title of this exercise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        title: <span class="string">'A fresh start'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Set the text that comes up when this exercise is in play</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you delete all the code in the box on the right?&lt;/div&gt;'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Set the sample code to show for this exercise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        sampleCode: <span class="string">"// no code needed! Simply clear out the code in the box on the right\n"</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Set a function to be run to check whether this exercise has been completed.
+If this function returns true, then we can pass on to the next exercise!</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        testConditions: <span class="keyword">function</span>(config) {
+            <span class="keyword">return</span> config.ballInSky === <span class="literal">null</span>
+                &amp;&amp; config.timeOfDay === <span class="string">'day'</span>;
+        }
+    }, {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>An exercise - this one tests to see if the user can make the sun shine</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        title: <span class="string">'Sun shine'</span>,
+        helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you show the sun?&lt;/div&gt;'</span>
+        +  <span class="string">'&lt;div class="alert alert-info"&gt;You can show the sun by calling the &lt;span class="inlineCode"&gt;showSun&lt;/span&gt; function that has already been defined for you.&lt;/div&gt;'</span>,
+        sampleCode: <span class="string">"// show the sun\nshowSun();\n"</span>,
+        testConditions: <span class="keyword">function</span>(config) {
+            <span class="keyword">return</span> config.ballInSky === <span class="string">'yellow'</span>
+                &amp;&amp; config.timeOfDay === <span class="string">'day'</span>;
+        }
+    },{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>An exercise - this one tests to see if the user can show the moon</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        title: <span class="string">'Moon time!'</span>,
+        helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you show the moon?&lt;/div&gt;'</span>
+            + <span class="string">'&lt;div class="alert alert-info"&gt;You can show the moon by calling the &lt;span class="inlineCode"&gt;showMoon&lt;/span&gt; function that has already been defined for you.&lt;/div&gt;'</span>
+            + <span class="string">'&lt;div class="alert alert-warning"&gt;Notice that if you call &lt;span class="inlineCode"&gt;showMoon();&lt;/span&gt; after other functions, it can draw over the top of what\'s underneath! This is due to the order that the code is executed in, so put it at the top of your code.&lt;/div&gt;'</span>,
+        sampleCode: <span class="string">"// show the sun\nshowMoon();\n"</span>,
+        testConditions: <span class="keyword">function</span>(config) {
+            <span class="keyword">return</span> config.ballInSky === <span class="string">'lightgray'</span>
+                &amp;&amp; config.timeOfDay === <span class="string">'day'</span>;
+        }
+    },{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>An exercise - this one tests to see if the user can show green sunshine
+by editing parameters of a function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        title: <span class="string">'Green sunshine'</span>,
+        helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you turn the sun green?&lt;/div&gt;'</span>
+                + <span class="string">'&lt;div class="alert alert-info"&gt;The functions &lt;span class="inlineCode"&gt;showSun&lt;/span&gt; and &lt;span class="inlineCode"&gt;showMoon&lt;/span&gt; are'</span>
+                + <span class="string">' actually a &lt;b&gt;wrapper&lt;/b&gt; around the function &lt;span class="inlineCode"&gt;showBallInSky&lt;/span&gt; that passes a &lt;b&gt;parameter&lt;/b&gt; in to tell it what colour to draw the ball. You could make the sun any colour you like! Wrapper functions are great for &lt;b&gt;composing functionality&lt;/b&gt; - making something complicated out of lots of simple things.'</span>
+                + <span class="string">'&lt;/div&gt;'</span>,
+        sampleCode: <span class="string">"// show a red ball\nshowBallInSky('red');\n"</span>,
+        testConditions: <span class="keyword">function</span>(config) {
+            <span class="keyword">return</span> config.ballInSky === <span class="string">'green'</span>
+                &amp;&amp; config.timeOfDay === <span class="string">'day'</span>;
+        }
+    },{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>An exercise - this one tests to see if the user can show plant a tree
+at a certain location</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        title: <span class="string">'Plant a tree'</span>,
+        helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you plan a tree 100 pixels from the left and 200 pixels from the top?&lt;/div&gt;'</span>
+            + <span class="string">'&lt;div class="alert alert-info"&gt;You can plant a tree by &lt;b&gt;calling&lt;/b&gt; the &lt;b class="inlineCode"&gt;plantTree&lt;/b&gt; function. You can tell the computer WHERE to plant the tree by using the parameters of plantTree.&lt;br/&gt;&lt;br/&gt;The first parameter is how many pixels from the LEFT of the screen. The second parameter is how many pixels from the TOP of the screen (Cartesian co-ordinates).&lt;/div&gt;'</span>,
+        sampleCode: <span class="string">"// plant a tree 130 pixels from the left\n// and 100 pixels from the top\nplantTree(130, 100);\n"</span>,
+        testConditions: <span class="keyword">function</span>(config) {
+            <span class="keyword">return</span> config.treesPlanted &gt; <span class="number">0</span> &amp;&amp; config.treePlantedAt100200;
+        }
+    },{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>An exercise - this one tests to see if the user can show plant 5 trees
+by calling a function multiple times</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        title: <span class="string">'Plant 5 trees'</span>,
+        helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you plant 5 trees?&lt;/div&gt;'</span>
+            + <span class="string">'&lt;div class="alert alert-info"&gt;The function &lt;span class="inlineCode"&gt;plantTree&lt;/span&gt;'</span>
+                    + <span class="string">' take two &lt;b&gt;arguments&lt;/b&gt; also known as &lt;b&gt;parameters&lt;/b&gt;. They are both &lt;b&gt;integers&lt;/b&gt; which means "whole numbers". You can plant as many as you like - the function can be called as often as you want.'</span>
+                    + <span class="string">' &lt;/div&gt;'</span>,
+        sampleCode: <span class="string">"plantTree(40, 150);\nplantTree(20, 170);\nplantTree(240, 110);\n"</span>,
+        testConditions: <span class="keyword">function</span>(config) {
+            <span class="keyword">return</span> config.treesPlanted === <span class="number">5</span>;
+        }
+    },{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>An exercise - can the user draw multiple trees in a loop?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        title: <span class="string">'Loopy for trees'</span>,
+        helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you plant 10 trees using a loop?&lt;/div&gt;'</span>
+                + <span class="string">'&lt;div class="alert alert-info"&gt;You can use a &lt;span class="inlineCode"&gt;for&lt;/span&gt; loop and a little bit of simple maths to draw a row of trees.'</span>
+                +  <span class="string">'&lt;/div&gt;'</span>,
+        sampleCode: <span class="string">"// plant a row of trees"</span>
+                + <span class="string">"\nvar treesToPlant = 4;"</span>
+                + <span class="string">"\nfor (var i = 0; i &lt; treesToPlant; i++) {"</span>
+                + <span class="string">"\n    var left = (i * (SCREEN_WIDTH / treesToPlant));"</span>
+                + <span class="string">"\n    plantTree(left, 180)"</span>
+                + <span class="string">"\n}\n"</span>,
+        testConditions: <span class="keyword">function</span>(config) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>Note that the test conditions are not sophisticated enough to truly
+detect that a loop has been used. In the interests of keeping the code
+light, we didn&#39;t go too far with that</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">return</span> config.treesPlanted === <span class="number">10</span>;
+        }
+    },{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>An exercise - can the user employ and adjust randomness?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        title: <span class="string">'Random trees'</span>,
+        helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you work out how to make tree placement more random?&lt;/div&gt;'</span>
+                    + <span class="string">'&lt;div class="alert alert-info"&gt;We use a &lt;b&gt;constant&lt;/b&gt;, &lt;span class="inlineCode"&gt;SCREEN_WIDTH&lt;/span&gt;, so we don\'t have to write \'400\' every time we want to specify the width of the viewport. This is called &lt;b&gt;avoiding magic numbers&lt;/b&gt; - magic is not good in programming! We like things to be clear!&lt;br/&gt;&lt;br/&gt;'</span>
+                    + <span class="string">' You could try doing a few things like adjust the number of trees to plant, or'</span>
+                    + <span class="string">' adjusting the distance of each tree from the top. Here, we\'ve randomised them.'</span>,
+        sampleCode: <span class="string">"// plant a row of trees"</span>
+                    + <span class="string">"\nvar treesToPlant = 7;"</span>
+                    + <span class="string">"\nvar randomness = 30;"</span>
+                    + <span class="string">"\nfor (var i = 0; i &lt; treesToPlant; i++) {"</span>
+                    + <span class="string">"\n    var left = (i * (SCREEN_WIDTH / treesToPlant));"</span>
+                    + <span class="string">"\n    plantTree(left, 150 + Math.floor(Math.random() * randomness));"</span>
+                    + <span class="string">"\n}\n"</span>,
+        testConditions: <span class="keyword">function</span>(config) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>Note that the test conditions are not sophisticated enough to truly
+detect that randomness has been used. In the interests of keeping the code
+light, we didn&#39;t go too far with that</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="keyword">return</span> config.treesPlanted === <span class="number">7</span>;
+        }
+    },{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>An exercise - can the user make it night time?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        title: <span class="string">'Make it night time!'</span>,
+        helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you make it dark?&lt;/div&gt;'</span>
+            + <span class="string">'&lt;div class="alert alert-info"&gt; You can make it night time by &lt;b&gt;calling&lt;/b&gt; the &lt;b&gt;function&lt;/b&gt; &lt;span class="inlineCode"&gt;setTimeOfDay&lt;/span&gt; and &lt;b&gt;passing in&lt;/b&gt; the &lt;b&gt;parameter&lt;/b&gt; \'night\'.&lt;/div&gt;'</span>
+            + <span class="string">'&lt;div class="alert alert-warning"&gt;You need to make sure that &lt;span class="inlinecode"&gt;setTimeOfDay&lt;/span&gt; is &lt;b&gt;called&lt;/b&gt;'</span>
+            + <span class="string">' before any other code, otherwise it could end up being displayed on top of trees!'</span>
+            + <span class="string">' This is because code &lt;b&gt;executes&lt;/b&gt; in the order it is written in.&lt;/div&gt;'</span>,
+        sampleCode: <span class="string">"// Make it night time\nsetTimeOfDay('night');\n"</span>,
+        testConditions: <span class="keyword">function</span>(config) {
+            <span class="keyword">return</span> config.timeOfDay === <span class="string">'night'</span>;
+        }
+    },{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>Free play - let the user loose on Canvas!</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        title: <span class="string">'Using Canvas'</span>,
+        helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you change the colours? Can you add more colour stops?&lt;/div&gt;'</span>
+            + <span class="string">'&lt;div class="alert alert-info"&gt;Under the hood, the &lt;span class="inlineCode"&gt;setTimeOfDay&lt;/span&gt; function'</span>
+            + <span class="string">' uses something called the &lt;a target="_BLANK" href="http://www.html5canvastutorials.com/"&gt;canvas&lt;/a&gt;.'</span>
+            + <span class="string">' You can draw onto this canvas in a variety of ways!&lt;br/&gt;&lt;br/&gt;Get your Google on and work out how to change the sky colour gradients! You can draw anything on a Canvas!&lt;/div&gt;'</span>,
+        sampleCode: <span class="string">"var grad = context.createLinearGradient(0, 0, 0, SCREEN_HEIGHT);"</span>
+                    + <span class="string">"\ngrad.addColorStop(0, 'red');"</span>
+                    + <span class="string">"\ngrad.addColorStop(0.2, 'orange');"</span>
+                    + <span class="string">"\ngrad.addColorStop(0.5, 'white');"</span>
+                    + <span class="string">"\ngrad.addColorStop(0.8, 'orange');"</span>
+                    + <span class="string">"\ngrad.addColorStop(1, 'red');"</span>
+                    + <span class="string">"\ncontext.fillStyle = grad;"</span>
+                    + <span class="string">"\ncontext.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);\n"</span>,
+        testConditions: <span class="keyword">function</span>(config) {
+            <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// this is the final test</span>
+        }
+    }];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>number that refers to the position in the exercies array that the user
+is currently on</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> exercisePtr = -<span class="number">1</span>;
+
+    <span class="keyword">var</span> showMeCount = <span class="number">0</span>;
+    <span class="keyword">var</span> SHOW_MES_BEFORE_WARN = <span class="number">4</span>;
+    <span class="function"><span class="keyword">function</span> <span class="title">copySampleToLive</span><span class="params">()</span> {</span>
+        <span class="keyword">var</span> val = <span class="literal">null</span>;
+        <span class="keyword">try</span> {
+            val = $(<span class="string">'#sampleCode'</span>)[<span class="number">0</span>].textContent;
+        }
+        <span class="keyword">catch</span> (e) {
+            val = $(<span class="string">'#sampleCode'</span>).html();
+        }
+        editor.setValue(editor.getValue() + <span class="string">"\n"</span> + unescape(val));
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>Has the finish screen been shown?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> finishShown = <span class="literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>Function that renders the current exercise, and update the progress meter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="comment">/**
+     * render the current exercise, and update the progress meter
+     *
+     * @returns {null}
+     */</span>
+    <span class="function"><span class="keyword">function</span> <span class="title">updateExercise</span><span class="params">()</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>get the configuration of the current exercise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">var</span> config = exercices[exercisePtr];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <p>draw the current exercise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        showInHelpBox(<span class="keyword">function</span>() {
+            $(<span class="string">'#puzzleTitle'</span>).html((exercisePtr+<span class="number">1</span>) + <span class="string">": "</span> + config.title);
+            $(<span class="string">'#btnMoreInfo'</span>).show();
+            $(<span class="string">'#helpText'</span>).html(config.helpText);
+            $(<span class="string">'#sampleCode'</span>).html(config.sampleCode);
+            $(<span class="string">'#btnMoreInfo'</span>).click(<span class="keyword">function</span>() {
+                showInHelpBox(<span class="keyword">function</span>() {
+                    $(<span class="string">'#btnMoreInfo'</span>).hide();
+                    config.moreInfoFunction();
+                });
+            });
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>Update the progress bar</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">var</span> perc = (<span class="number">100</span> * exercisePtr/(exercices.length - <span class="number">1</span>));
+        $(<span class="string">'.bar'</span>).css(<span class="string">'width'</span>, perc + <span class="string">'%'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>Check to see if the user finished all the exercises</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span>(!finishShown &amp;&amp; perc === <span class="number">100</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p>After a brief delay, show the &quot;finished&quot; screen, if it&#39;s never
+been shown before</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            finishShown = <span class="literal">true</span>;
+            setTimeout(<span class="keyword">function</span>() {
+                $(<span class="string">"#finishScreen"</span>)
+                    .modal(<span class="string">'show'</span>)
+                    .on(<span class="string">'hide'</span>, <span class="keyword">function</span>() {
+                        editor.setValue(<span class="string">''</span>);
+                        copySampleToLive();
+                    });
+            }, <span class="number">1000</span>);
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>Show the back and forth controls only if the first exercise is complete.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span>(exercisePtr &lt;= <span class="number">0</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p>Hide back/forth controls if user is on the first exercise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            $(<span class="string">'#controls'</span>).hide();
+        } <span class="keyword">else</span> <span class="keyword">if</span>(exercisePtr === <span class="number">1</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <p>Show back control if user is on the second exercise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            $(<span class="string">'#controls'</span>).fadeIn();
+        } <span class="keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <p>Show controls if user is beyond the second exercise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            $(<span class="string">'#controls'</span>).show();
+        }
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p>Function that advances the exercise the user is looking at. Symmetric to prevExercise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="comment">/**
+     * advance the exercise the user is looking at. Symmetric to prevExercise
+     * @returns {null}
+     */</span>
+    <span class="function"><span class="keyword">function</span> <span class="title">nextExercise</span><span class="params">()</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>If we&#39;re not at the end of the exercise list, then go to the next
+exercise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span>(exercisePtr &lt; (exercices.length - <span class="number">1</span>)) {
+            ++exercisePtr;
+        }
+        updateExercise();
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <p>Function that regresses the exercise the user is looking at. Symmetric to nextExercise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="comment">/**
+     * regress the exercise the user is looking at. Symmetric to nextExercise
+     * @returns {null}
+     */</span>
+    <span class="function"><span class="keyword">function</span> <span class="title">prevExercise</span><span class="params">()</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <p>If we&#39;re not at the start of the exercise list, then go to the next
+exercise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span>(exercisePtr &gt; <span class="number">0</span>) {
+            exercisePtr--;
+        }
+        updateExercise();
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-56">&#182;</a>
+              </div>
+              <p>Use jQuery to wire up the &quot;show me&quot; back button to copy sample code into
+the user&#39;s code editor in the middle pane</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    $(<span class="string">'#btnShowMe'</span>).click(<span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-57">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-57">&#182;</a>
+              </div>
+              <p>If the user seems to be using this functionality a lot, s/he might
+not learn as well, so pop up an alert to this effect</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span> (++showMeCount === SHOW_MES_BEFORE_WARN) {
+            alert(<span class="string">"You've used the 'Show me how!' button "</span> + showMeCount
+                    + <span class="string">" times now - you will probably learn more if you type the"</span>
+                    + <span class="string">" code in! It's up to you, we won't nag you again! :-)"</span>);
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-58">&#182;</a>
+              </div>
+              <p>Copy the code from the coding sample on the leftmost pane into the
+code editor in the central pane</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        copySampleToLive();
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-59">&#182;</a>
+              </div>
+              <p>Check to see if the tutorial is complete. If so, don&#39;t bother showing it</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span>(window &amp;&amp; window.localStorage &amp;&amp; window.localStorage.getItem &amp;&amp; window.localStorage.getItem(<span class="string">'tutorial'</span>) === <span class="string">'done'</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-60">&#182;</a>
+              </div>
+              <p>Show the main panels</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        $(<span class="string">'#panelTipsAndTools, #panelYourScene, #panelYourCode'</span>).show();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-61">&#182;</a>
+              </div>
+              <p>Hide the info on Your scene</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        $(<span class="string">'#yourSceneInfo'</span>).hide();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-62">&#182;</a>
+              </div>
+              <p>update the code display</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        editor.refresh();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-63">&#182;</a>
+              </div>
+              <p>show the first tip</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        nextExercise();
+    } <span class="keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-64">&#182;</a>
+              </div>
+              <p>The tutorial hasn&#39;t been run, so run the user through a quick tutorial
+OK, this code here is a bit hideous and needs refactoring!</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        $(<span class="string">'#panelTipsAndTools'</span>).fadeIn(<span class="number">400</span>, <span class="keyword">function</span>() {
+            $(<span class="string">'#btnReady'</span>).click(<span class="keyword">function</span>() {
+                $(<span class="string">'#btnReady'</span>).fadeOut();
+                $(<span class="string">'#panelYourScene'</span>).fadeIn(<span class="number">400</span>, <span class="keyword">function</span>() {
+                    $(<span class="string">'#btnReady2'</span>).click(<span class="keyword">function</span>() {
+                        $(<span class="string">'#yourSceneInfo'</span>).fadeOut();
+                        editor.refresh();
+                        $(<span class="string">'#panelYourCode'</span>).fadeIn(<span class="number">400</span>, <span class="keyword">function</span>() {
+                            editor.refresh();
+
+                            $(<span class="string">'#introText'</span>).fadeOut(<span class="number">400</span>, <span class="keyword">function</span>() {
+                                $(<span class="string">'#introText'</span>).html(<span class="string">'The button above will help you get started!'</span>);
+                                $(<span class="string">'#btnHowTo, #introText'</span>).fadeIn();
+                                <span class="keyword">if</span>(window &amp;&amp; window.localStorage &amp;&amp; window.localStorage.setItem) {
+                                     window.localStorage.setItem(<span class="string">'tutorial'</span>, <span class="string">'done'</span>);
+                                }
+                                nextExercise();
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-65">&#182;</a>
+              </div>
+              <p>Use jQuery to wire up the back button to call the prevTip function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    $(<span class="string">'#btnBack'</span>).click(<span class="keyword">function</span>() {
+        prevExercise();
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-66">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-66">&#182;</a>
+              </div>
+              <p>Function that is called from jscene-iframe.js. It is on the &quot;window&quot;
+object so that it is global - it can be accessed outside of this closure.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="comment">/**
+     * @param {object} testConditions The collection to test against the current
+     * exercise's testConditions function
+     * @returns {null}
+     */</span>
+    window.repaintListener = <span class="keyword">function</span>(testConditions) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-67">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-67">&#182;</a>
+              </div>
+              <p>If we are not on an exercise, don&#39;t do anything</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span>(exercisePtr &lt; <span class="number">0</span>) {
+            <span class="keyword">return</span>;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-68">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-68">&#182;</a>
+              </div>
+              <p>If the code the user has entered isn&#39;t valid, simply show the code
+invalid badge and do nothing.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span>(!testConditions.valid) {
+            $(<span class="string">'#code-valid'</span>).hide();
+            $(<span class="string">'#code-invalid'</span>).show();
+            <span class="keyword">return</span>;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-69">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-69">&#182;</a>
+              </div>
+              <p>If the user has passed the test, then advance to the next tip.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span>(exercices[exercisePtr].testConditions(testConditions)) {
+            nextExercise();
+        }
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-70">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-70">&#182;</a>
+              </div>
+              <p>Make the nextTip function globally accessible. This is useful for debugging
+so, for example, you can call nextTip(); in the browser console to skip
+an exercise.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    window.nextTip = nextExercise;
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

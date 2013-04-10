@@ -1,12 +1,12 @@
 /*global alert, confirm, unescape*/
 
-// This file contains the tutorial part of Scene Creator - it handles updating
+// This file contains the tutorial part of jScene - it handles updating
 // the iframe preview and showing tips to the user
 //
 // This file is included in the main window and is not included in the
 // iframe that shows the preview
 
-/* jScene scene creator */
+/* jScene - scene creator tool in JavaScript */
 
 // Wrap the code in a closure. This isolates it and means it doesn't
 // make a mess in the browser's memory by creating lots of global functions

@@ -127,7 +127,7 @@ basically a set of keys which relate to values.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="keyword">var</span> testConditions = {
-    <span class="string">'ballInSky'</span>: <span class="literal">null</span>,
+    <span class="string">'orb'</span>: <span class="literal">null</span>,
     <span class="string">'timeOfDay'</span>: <span class="literal">null</span>,
     <span class="string">'treesPlanted'</span>: <span class="number">0</span>,
     <span class="string">'treePlantedAt100200'</span>: <span class="literal">false</span>,
@@ -161,7 +161,7 @@ basically a set of keys which relate to values.</p>
 time from their code. The order the function are called in determines which
 elements are &quot;layered&quot; on top of one another - so, if you were to call:</p>
 <pre><code>showTree(100,100);
-setTimeOfDay(night);</code></pre>
+settime(night);</code></pre>
 <p>then the night sky would overlap the trees!</p>
 
             </div>
@@ -189,7 +189,7 @@ is drawn by default.</p>
  *
  * @returns {null}
  */</span>
-<span class="function"><span class="keyword">function</span> <span class="title">setTimeOfDay</span><span class="params">(time)</span> {</span>
+<span class="function"><span class="keyword">function</span> <span class="title">settime</span><span class="params">(time)</span> {</span>
     <span class="keyword">var</span> skyGrad = context.createLinearGradient(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">150</span>);
     <span class="keyword">if</span>(time === <span class="string">'night'</span>) {
         skyGrad.addColorStop(<span class="number">0</span>, <span class="string">'#000000'</span>);
@@ -219,7 +219,7 @@ is drawn by default.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>setTimeOfDay(<span class="string">'day'</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>settime(<span class="string">'day'</span>);</pre></div></div>
             
         </li>
         
@@ -245,7 +245,7 @@ is planted.</p>
  *
  * @returns {null}
  */</span>
-<span class="function"><span class="keyword">function</span> <span class="title">plantTree</span><span class="params">(left, top)</span> {</span>
+<span class="function"><span class="keyword">function</span> <span class="title">tree</span><span class="params">(left, top)</span> {</span>
     <span class="keyword">var</span> treeTrunkWidth = <span class="number">30</span>;</pre></div></div>
             
         </li>
@@ -335,7 +335,7 @@ not the user has &quot;passed&quot; certain exercises</p>
               <p>Function that can display a quarter of a ball in the top right
 corner of the user&#39;s preview window. The user can specify a colour for this
 ball</p>
-<p>See also showSun and showMoon, which are wrappers for this function</p>
+<p>See also sun and moon, which are wrappers for this function</p>
 
             </div>
             
@@ -346,14 +346,14 @@ ball</p>
  *
  * @returns {null}
  */</span>
-<span class="function"><span class="keyword">function</span> <span class="title">showBallInSky</span><span class="params">(colour)</span> {</span>
+<span class="function"><span class="keyword">function</span> <span class="title">orb</span><span class="params">(colour)</span> {</span>
     context.beginPath();
     <span class="keyword">var</span> radius = <span class="number">50</span>;
     context.arc(SCREEN_WIDTH, <span class="number">0</span>, radius, <span class="number">0</span>, <span class="number">2</span> * Math.PI, <span class="literal">false</span>);
     context.fillStyle = colour;
     context.fill();
 
-    testConditions.ballInSky = colour;
+    testConditions.orb = colour;
 }</pre></div></div>
             
         </li>
@@ -365,7 +365,7 @@ ball</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>Function to draw the sun. This function is a wrapper of showBallInSky</p>
+              <p>Function to draw the sun. This function is a wrapper of orb</p>
 
             </div>
             
@@ -374,8 +374,8 @@ ball</p>
  *
  * @returns {null}
  */</span>
-<span class="function"><span class="keyword">function</span> <span class="title">showSun</span><span class="params">()</span> {</span>
-    showBallInSky(<span class="string">'yellow'</span>);
+<span class="function"><span class="keyword">function</span> <span class="title">sun</span><span class="params">()</span> {</span>
+    orb(<span class="string">'yellow'</span>);
 }</pre></div></div>
             
         </li>
@@ -387,7 +387,7 @@ ball</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>Function to draw the moon. This functino is a wrapper of showBallInSky</p>
+              <p>Function to draw the moon. This functino is a wrapper of orb</p>
 
             </div>
             
@@ -396,8 +396,8 @@ ball</p>
  *
  * @returns {null}
  */</span>
-<span class="function"><span class="keyword">function</span> <span class="title">showMoon</span><span class="params">()</span> {</span>
-    showBallInSky(<span class="string">'lightgray'</span>);
+<span class="function"><span class="keyword">function</span> <span class="title">moon</span><span class="params">()</span> {</span>
+    orb(<span class="string">'lightgray'</span>);
 }</pre></div></div>
             
         </li>

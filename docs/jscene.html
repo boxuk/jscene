@@ -560,7 +560,7 @@ If this function returns true, then we can pass on to the next exercise!</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>        testConditions: <span class="keyword">function</span>(config) {
-            <span class="keyword">return</span> config.ballInSky === <span class="literal">null</span>
+            <span class="keyword">return</span> config.orb === <span class="literal">null</span>
                 &amp;&amp; config.timeOfDay === <span class="string">'day'</span>;
         }
     }, {</pre></div></div>
@@ -580,10 +580,10 @@ If this function returns true, then we can pass on to the next exercise!</p>
             
             <div class="content"><div class='highlight'><pre>        title: <span class="string">'Sun shine'</span>,
         helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you show the sun?&lt;/div&gt;'</span>
-        +  <span class="string">'&lt;div class="alert alert-info"&gt;You can show the sun by calling the &lt;span class="inlineCode"&gt;showSun&lt;/span&gt; function that has already been defined for you.&lt;/div&gt;'</span>,
-        sampleCode: <span class="string">"// show the sun\nshowSun();\n"</span>,
+        +  <span class="string">'&lt;div class="alert alert-info"&gt;You can show the sun by calling the &lt;span class="inlineCode"&gt;sun&lt;/span&gt; function that has already been defined for you.&lt;/div&gt;'</span>,
+        sampleCode: <span class="string">"// show the sun\nsun();\n"</span>,
         testConditions: <span class="keyword">function</span>(config) {
-            <span class="keyword">return</span> config.ballInSky === <span class="string">'yellow'</span>
+            <span class="keyword">return</span> config.orb === <span class="string">'yellow'</span>
                 &amp;&amp; config.timeOfDay === <span class="string">'day'</span>;
         }
     },{</pre></div></div>
@@ -603,11 +603,11 @@ If this function returns true, then we can pass on to the next exercise!</p>
             
             <div class="content"><div class='highlight'><pre>        title: <span class="string">'Moon time!'</span>,
         helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you show the moon?&lt;/div&gt;'</span>
-            + <span class="string">'&lt;div class="alert alert-info"&gt;You can show the moon by calling the &lt;span class="inlineCode"&gt;showMoon&lt;/span&gt; function that has already been defined for you.&lt;/div&gt;'</span>
-            + <span class="string">'&lt;div class="alert alert-warning"&gt;Notice that if you call &lt;span class="inlineCode"&gt;showMoon();&lt;/span&gt; after other functions, it can draw over the top of what\'s underneath! This is due to the order that the code is executed in, so put it at the top of your code.&lt;/div&gt;'</span>,
-        sampleCode: <span class="string">"// show the sun\nshowMoon();\n"</span>,
+            + <span class="string">'&lt;div class="alert alert-info"&gt;You can show the moon by calling the &lt;span class="inlineCode"&gt;moon&lt;/span&gt; function that has already been defined for you.&lt;/div&gt;'</span>
+            + <span class="string">'&lt;div class="alert alert-warning"&gt;Notice that if you call &lt;span class="inlineCode"&gt;moon();&lt;/span&gt; after other functions, it can draw over the top of what\'s underneath! This is due to the order that the code is executed in, so put it at the top of your code.&lt;/div&gt;'</span>,
+        sampleCode: <span class="string">"// show the sun\nmoon();\n"</span>,
         testConditions: <span class="keyword">function</span>(config) {
-            <span class="keyword">return</span> config.ballInSky === <span class="string">'lightgray'</span>
+            <span class="keyword">return</span> config.orb === <span class="string">'lightgray'</span>
                 &amp;&amp; config.timeOfDay === <span class="string">'day'</span>;
         }
     },{</pre></div></div>
@@ -628,12 +628,12 @@ by editing parameters of a function</p>
             
             <div class="content"><div class='highlight'><pre>        title: <span class="string">'Green sunshine'</span>,
         helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you turn the sun green?&lt;/div&gt;'</span>
-                + <span class="string">'&lt;div class="alert alert-info"&gt;The functions &lt;span class="inlineCode"&gt;showSun&lt;/span&gt; and &lt;span class="inlineCode"&gt;showMoon&lt;/span&gt; are'</span>
-                + <span class="string">' actually a &lt;b&gt;wrapper&lt;/b&gt; around the function &lt;span class="inlineCode"&gt;showBallInSky&lt;/span&gt; that passes a &lt;b&gt;parameter&lt;/b&gt; in to tell it what colour to draw the ball. You could make the sun any colour you like! Wrapper functions are great for &lt;b&gt;composing functionality&lt;/b&gt; - making something complicated out of lots of simple things.'</span>
+                + <span class="string">'&lt;div class="alert alert-info"&gt;The functions &lt;span class="inlineCode"&gt;sun&lt;/span&gt; and &lt;span class="inlineCode"&gt;moon&lt;/span&gt; are'</span>
+                + <span class="string">' actually a &lt;b&gt;wrapper&lt;/b&gt; around the function &lt;span class="inlineCode"&gt;orb&lt;/span&gt; that passes a &lt;b&gt;parameter&lt;/b&gt; in to tell it what colour to draw the ball. You could make the sun any colour you like! Wrapper functions are great for &lt;b&gt;composing functionality&lt;/b&gt; - making something complicated out of lots of simple things.'</span>
                 + <span class="string">'&lt;/div&gt;'</span>,
-        sampleCode: <span class="string">"// show a red ball\nshowBallInSky('red');\n"</span>,
+        sampleCode: <span class="string">"// show a red ball\norb('red');\n"</span>,
         testConditions: <span class="keyword">function</span>(config) {
-            <span class="keyword">return</span> config.ballInSky === <span class="string">'green'</span>
+            <span class="keyword">return</span> config.orb === <span class="string">'green'</span>
                 &amp;&amp; config.timeOfDay === <span class="string">'day'</span>;
         }
     },{</pre></div></div>
@@ -654,8 +654,8 @@ at a certain location</p>
             
             <div class="content"><div class='highlight'><pre>        title: <span class="string">'Plant a tree'</span>,
         helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you plan a tree 100 pixels from the left and 200 pixels from the top?&lt;/div&gt;'</span>
-            + <span class="string">'&lt;div class="alert alert-info"&gt;You can plant a tree by &lt;b&gt;calling&lt;/b&gt; the &lt;b class="inlineCode"&gt;plantTree&lt;/b&gt; function. You can tell the computer WHERE to plant the tree by using the parameters of plantTree.&lt;br/&gt;&lt;br/&gt;The first parameter is how many pixels from the LEFT of the screen. The second parameter is how many pixels from the TOP of the screen (Cartesian co-ordinates).&lt;/div&gt;'</span>,
-        sampleCode: <span class="string">"// plant a tree 130 pixels from the left\n// and 100 pixels from the top\nplantTree(130, 100);\n"</span>,
+            + <span class="string">'&lt;div class="alert alert-info"&gt;You can plant a tree by &lt;b&gt;calling&lt;/b&gt; the &lt;b class="inlineCode"&gt;tree&lt;/b&gt; function. You can tell the computer WHERE to plant the tree by using the parameters of tree.&lt;br/&gt;&lt;br/&gt;The first parameter is how many pixels from the LEFT of the screen. The second parameter is how many pixels from the TOP of the screen (Cartesian co-ordinates).&lt;/div&gt;'</span>,
+        sampleCode: <span class="string">"// plant a tree 130 pixels from the left\n// and 100 pixels from the top\ntree(130, 100);\n"</span>,
         testConditions: <span class="keyword">function</span>(config) {
             <span class="keyword">return</span> config.treesPlanted &gt; <span class="number">0</span> &amp;&amp; config.treePlantedAt100200;
         }
@@ -677,10 +677,10 @@ by calling a function multiple times</p>
             
             <div class="content"><div class='highlight'><pre>        title: <span class="string">'Plant 5 trees'</span>,
         helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you plant 5 trees?&lt;/div&gt;'</span>
-            + <span class="string">'&lt;div class="alert alert-info"&gt;The function &lt;span class="inlineCode"&gt;plantTree&lt;/span&gt;'</span>
+            + <span class="string">'&lt;div class="alert alert-info"&gt;The function &lt;span class="inlineCode"&gt;tree&lt;/span&gt;'</span>
                     + <span class="string">' take two &lt;b&gt;arguments&lt;/b&gt; also known as &lt;b&gt;parameters&lt;/b&gt;. They are both &lt;b&gt;integers&lt;/b&gt; which means "whole numbers". You can plant as many as you like - the function can be called as often as you want.'</span>
                     + <span class="string">' &lt;/div&gt;'</span>,
-        sampleCode: <span class="string">"plantTree(40, 150);\nplantTree(20, 170);\nplantTree(240, 110);\n"</span>,
+        sampleCode: <span class="string">"tree(40, 150);\ntree(20, 170);\ntree(240, 110);\n"</span>,
         testConditions: <span class="keyword">function</span>(config) {
             <span class="keyword">return</span> config.treesPlanted === <span class="number">5</span>;
         }
@@ -707,7 +707,7 @@ by calling a function multiple times</p>
                 + <span class="string">"\nvar treesToPlant = 4;"</span>
                 + <span class="string">"\nfor (var i = 0; i &lt; treesToPlant; i++) {"</span>
                 + <span class="string">"\n    var left = (i * (SCREEN_WIDTH / treesToPlant));"</span>
-                + <span class="string">"\n    plantTree(left, 180)"</span>
+                + <span class="string">"\n    tree(left, 180)"</span>
                 + <span class="string">"\n}\n"</span>,
         testConditions: <span class="keyword">function</span>(config) {</pre></div></div>
             
@@ -753,7 +753,7 @@ light, we didn&#39;t go too far with that</p>
                     + <span class="string">"\nvar randomness = 30;"</span>
                     + <span class="string">"\nfor (var i = 0; i &lt; treesToPlant; i++) {"</span>
                     + <span class="string">"\n    var left = (i * (SCREEN_WIDTH / treesToPlant));"</span>
-                    + <span class="string">"\n    plantTree(left, 150 + Math.floor(Math.random() * randomness));"</span>
+                    + <span class="string">"\n    tree(left, 150 + Math.floor(Math.random() * randomness));"</span>
                     + <span class="string">"\n}\n"</span>,
         testConditions: <span class="keyword">function</span>(config) {</pre></div></div>
             
@@ -791,11 +791,11 @@ light, we didn&#39;t go too far with that</p>
             
             <div class="content"><div class='highlight'><pre>        title: <span class="string">'Make it night time!'</span>,
         helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you make it dark?&lt;/div&gt;'</span>
-            + <span class="string">'&lt;div class="alert alert-info"&gt; You can make it night time by &lt;b&gt;calling&lt;/b&gt; the &lt;b&gt;function&lt;/b&gt; &lt;span class="inlineCode"&gt;setTimeOfDay&lt;/span&gt; and &lt;b&gt;passing in&lt;/b&gt; the &lt;b&gt;parameter&lt;/b&gt; \'night\'.&lt;/div&gt;'</span>
-            + <span class="string">'&lt;div class="alert alert-warning"&gt;You need to make sure that &lt;span class="inlinecode"&gt;setTimeOfDay&lt;/span&gt; is &lt;b&gt;called&lt;/b&gt;'</span>
+            + <span class="string">'&lt;div class="alert alert-info"&gt; You can make it night time by &lt;b&gt;calling&lt;/b&gt; the &lt;b&gt;function&lt;/b&gt; &lt;span class="inlineCode"&gt;settime&lt;/span&gt; and &lt;b&gt;passing in&lt;/b&gt; the &lt;b&gt;parameter&lt;/b&gt; \'night\'.&lt;/div&gt;'</span>
+            + <span class="string">'&lt;div class="alert alert-warning"&gt;You need to make sure that &lt;span class="inlinecode"&gt;settime&lt;/span&gt; is &lt;b&gt;called&lt;/b&gt;'</span>
             + <span class="string">' before any other code, otherwise it could end up being displayed on top of trees!'</span>
             + <span class="string">' This is because code &lt;b&gt;executes&lt;/b&gt; in the order it is written in.&lt;/div&gt;'</span>,
-        sampleCode: <span class="string">"// Make it night time\nsetTimeOfDay('night');\n"</span>,
+        sampleCode: <span class="string">"// Make it night time\nsettime('night');\n"</span>,
         testConditions: <span class="keyword">function</span>(config) {
             <span class="keyword">return</span> config.timeOfDay === <span class="string">'night'</span>;
         }
@@ -816,7 +816,7 @@ light, we didn&#39;t go too far with that</p>
             
             <div class="content"><div class='highlight'><pre>        title: <span class="string">'Using Canvas'</span>,
         helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you change the colours? Can you add more colour stops?&lt;/div&gt;'</span>
-            + <span class="string">'&lt;div class="alert alert-info"&gt;Under the hood, the &lt;span class="inlineCode"&gt;setTimeOfDay&lt;/span&gt; function'</span>
+            + <span class="string">'&lt;div class="alert alert-info"&gt;Under the hood, the &lt;span class="inlineCode"&gt;settime&lt;/span&gt; function'</span>
             + <span class="string">' uses something called the &lt;a target="_BLANK" href="http://www.html5canvastutorials.com/"&gt;canvas&lt;/a&gt;.'</span>
             + <span class="string">' You can draw onto this canvas in a variety of ways!&lt;br/&gt;&lt;br/&gt;Get your Google on and work out how to change the sky colour gradients! You can draw anything on a Canvas!&lt;/div&gt;'</span>,
         sampleCode: <span class="string">"var grad = context.createLinearGradient(0, 0, 0, SCREEN_HEIGHT);"</span>

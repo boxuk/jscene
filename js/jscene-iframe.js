@@ -27,7 +27,7 @@ context.fillRect(0, 150, SCREEN_WIDTH, 300);
 // on to the next exercise. This is a JavaScript value object - it is
 // basically a set of keys which relate to values.
 var testConditions = {
-    'ballInSky': null,
+    'orb': null,
     'timeOfDay': null,
     'treesPlanted': 0,
     'treePlantedAt100200': false,
@@ -40,7 +40,7 @@ var testConditions = {
 // elements are "layered" on top of one another - so, if you were to call:
 //
 //     showTree(100,100);
-//     setTimeOfDay(night);
+//     settime(night);
 //
 // then the night sky would overlap the trees!
 
@@ -56,7 +56,7 @@ var testConditions = {
  *
  * @returns {null}
  */
-function setTimeOfDay(time) {
+function settime(time) {
     var skyGrad = context.createLinearGradient(0,0,0,150);
     if(time === 'night') {
         skyGrad.addColorStop(0, '#000000');
@@ -74,7 +74,7 @@ function setTimeOfDay(time) {
 }
 
 // Make sure that the time of day has been set
-setTimeOfDay('day');
+settime('day');
 
 // This function allows the user to plant a tree. The user can specify where the tree
 // is planted.
@@ -89,7 +89,7 @@ setTimeOfDay('day');
  *
  * @returns {null}
  */
-function plantTree(left, top) {
+function tree(left, top) {
     var treeTrunkWidth = 30;
 
     // Draw the trunk
@@ -123,7 +123,7 @@ function plantTree(left, top) {
 // corner of the user's preview window. The user can specify a colour for this
 // ball
 //
-// See also showSun and showMoon, which are wrappers for this function
+// See also sun and moon, which are wrappers for this function
 
 /**
  * Show a ball in the top right corner (e.g. the sun)
@@ -132,36 +132,36 @@ function plantTree(left, top) {
  *
  * @returns {null}
  */
-function showBallInSky(colour) {
+function orb(colour) {
     context.beginPath();
     var radius = 50;
     context.arc(SCREEN_WIDTH, 0, radius, 0, 2 * Math.PI, false);
     context.fillStyle = colour;
     context.fill();
 
-    testConditions.ballInSky = colour;
+    testConditions.orb = colour;
 }
 
-// Function to draw the sun. This function is a wrapper of showBallInSky
+// Function to draw the sun. This function is a wrapper of orb
 
 /**
  * Show the sun in the top right corner
  *
  * @returns {null}
  */
-function showSun() {
-    showBallInSky('yellow');
+function sun() {
+    orb('yellow');
 }
 
-// Function to draw the moon. This functino is a wrapper of showBallInSky
+// Function to draw the moon. This functino is a wrapper of orb
 
 /**
  * Show the moon in the top right corner
  *
  * @returns {null}
  */
-function showMoon() {
-    showBallInSky('lightgray');
+function moon() {
+    orb('lightgray');
 }
 
 // A secret function! If users are playing around, perhaps they'll find this

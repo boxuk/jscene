@@ -19,6 +19,11 @@
           <div id="jump_page">
             
               
+              <a class="source" href="exercises.html">
+                exercises.js
+              </a>
+            
+              
               <a class="source" href="jscene-iframe.html">
                 jscene-iframe.js
               </a>
@@ -131,7 +136,7 @@ basically a set of keys which relate to values.</p>
     <span class="string">'timeOfDay'</span>: <span class="literal">null</span>,
     <span class="string">'treesPlanted'</span>: <span class="number">0</span>,
     <span class="string">'treePlantedAt100200'</span>: <span class="literal">false</span>,
-    <span class="string">'valid'</span>: <span class="literal">false</span> <span class="comment">// set in wrapper function in jscene.js.</span></pre></div></div>
+    <span class="string">'valid'</span>: <span class="literal">false</span>, <span class="comment">// set in wrapper function in jscene.js.</span></pre></div></div>
             
         </li>
         
@@ -146,7 +151,9 @@ basically a set of keys which relate to values.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="string">'birds'</span>: <span class="number">0</span>,
+    <span class="string">'treesPlantedInDifferentPlaces'</span>: <span class="literal">true</span>
+};</pre></div></div>
             
         </li>
         
@@ -235,7 +242,9 @@ is planted.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="comment">/**
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> plantedTreeLocations = [];
+
+<span class="comment">/**
  * Plant a tree - render a tree on the screen
  *
  * @param {int} left Number of pixels from the left of the screen to show the
@@ -321,6 +330,14 @@ not the user has &quot;passed&quot; certain exercises</p>
             
             <div class="content"><div class='highlight'><pre>    testConditions.treePlantedAt100200 = (left === <span class="number">100</span> &amp;&amp; top === <span class="number">200</span>);
     testConditions.treesPlanted++;
+
+    <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; plantedTreeLocations.length; i++) {
+        <span class="keyword">if</span>(plantedTreeLocations[i][<span class="number">0</span>] === left
+            &amp;&amp; plantedTreeLocations[i][<span class="number">1</span>] === top) {
+            testConditions.treesPlantedInDifferentPlaces = <span class="literal">false</span>;
+        }
+    }
+    plantedTreeLocations.push([left, top]);
 }</pre></div></div>
             
         </li>
@@ -387,7 +404,7 @@ ball</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>Function to draw the moon. This functino is a wrapper of orb</p>
+              <p>Function to draw the moon. This function is a wrapper of orb</p>
 
             </div>
             
@@ -421,7 +438,40 @@ function!</p>
  */</span>
 <span class="function"><span class="keyword">function</span> <span class="title">secret</span><span class="params">()</span> {</span>
     alert(<span class="string">"You found the secret function! You have great promise! Keep it up! Tell the Box UK guys the code is 'D L N'"</span>);
+}
+
+<span class="keyword">if</span> (<span class="keyword">typeof</span> birds === <span class="string">"undefined"</span>) {
+    <span class="keyword">var</span> birds = <span class="number">0</span>;
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">drawBird</span><span class="params">(i)</span> {</span>
+    <span class="keyword">var</span> startX = (i * <span class="number">60</span>) + <span class="number">10</span>;
+    <span class="keyword">var</span> startY = ((i % <span class="number">3</span>)  * <span class="number">10</span>) + <span class="number">40</span> ;
+
+    context.strokeStyle = <span class="string">"#222222"</span>;
+    context.lineWidth = <span class="number">3</span>;
+    context.beginPath();
+    context.moveTo(startX, startY);
+    context.lineTo(startX + <span class="number">20</span>, startY + <span class="number">10</span>);
+    context.lineTo(startX + <span class="number">40</span>, startY);
+    context.stroke();
 }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Support ctx as an alias for context. This makes some online
+examples easier to paste.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> ctx = context;</pre></div></div>
             
         </li>
         

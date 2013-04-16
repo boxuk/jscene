@@ -165,7 +165,7 @@ function sun() {
     orb('yellow');
 }
 
-// Function to draw the moon. This functino is a wrapper of orb
+// Function to draw the moon. This function is a wrapper of orb
 
 /**
  * Show the moon in the top right corner

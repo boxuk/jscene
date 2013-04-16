@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>exercises.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="exercises.html">
+                exercises.js
+              </a>
+            
+              
+              <a class="source" href="jscene-iframe.html">
+                jscene-iframe.js
+              </a>
+            
+              
+              <a class="source" href="jscene.html">
+                jscene.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>exercises.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>window.jscene = window.jscene||{};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Define a set of exercices in a JSONish format (it&#39;s JSON but it has comments!)
+These are the jobs that the user must do and the criteria to progress through them</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>window.jscene.exercises = [{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>An exercise - can the user delete all the code?
+Set the title of this exercise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    title: <span class="string">'A fresh start'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Set the text that comes up when this exercise is in play</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you delete all the code in the box on the right?&lt;/div&gt;'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Set the sample code to show for this exercise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    sampleCode: <span class="string">"// no code needed! Simply clear out the code in the box on the right\n"</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Set a function to be run to check whether this exercise has been completed.
+If this function returns true, then we can pass on to the next exercise!</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    testConditions: <span class="keyword">function</span>(config) {
+        <span class="keyword">return</span> config.orb === <span class="literal">null</span>
+            &amp;&amp; config.timeOfDay === <span class="string">'day'</span>;
+    },
+    completionNotes: <span class="literal">null</span>
+}, {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>An exercise - this one tests to see if the user can make the sun shine</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    title: <span class="string">'Sun shine'</span>,
+    helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you show the sun?&lt;/div&gt;'</span>
+    +  <span class="string">'&lt;div class="alert alert-info"&gt;You can show the sun by calling the &lt;span class="inlineCode"&gt;sun&lt;/span&gt; function that has already been defined for you.&lt;/div&gt;'</span>,
+    sampleCode: <span class="string">"sun();\n"</span>,
+    testConditions: <span class="keyword">function</span>(config) {
+        <span class="keyword">return</span> config.orb === <span class="string">'yellow'</span>
+            &amp;&amp; config.timeOfDay === <span class="string">'day'</span>;
+    },
+    completionNotes: <span class="string">'sun();'</span>
+},{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>An exercise - this one tests to see if the user can show the moon</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    title: <span class="string">'Moon time!'</span>,
+    helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you show the moon?&lt;/div&gt;'</span>
+        + <span class="string">'&lt;div class="alert alert-info"&gt;You can show the moon by calling the &lt;span class="inlineCode"&gt;moon&lt;/span&gt; function that has already been defined for you.&lt;/div&gt;'</span>
+        + <span class="string">'&lt;div class="alert alert-warning"&gt;Notice that if you call &lt;span class="inlineCode"&gt;moon();&lt;/span&gt; after other functions, it can draw over the top of what\'s underneath! This is due to the order that the code is executed in, so put it at the top of your code.&lt;/div&gt;'</span>,
+    sampleCode: <span class="string">"moon();\n"</span>,
+    testConditions: <span class="keyword">function</span>(config) {
+        <span class="keyword">return</span> config.orb === <span class="string">'lightgray'</span>
+            &amp;&amp; config.timeOfDay === <span class="string">'day'</span>;
+    },
+    completionNotes: <span class="string">'moon();'</span>
+},{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>An exercise - this one tests to see if the user can show green sunshine
+by editing parameters of a function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    title: <span class="string">'Green sunshine'</span>,
+    helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you turn the sun green?&lt;/div&gt;'</span>
+            + <span class="string">'&lt;div class="alert alert-info"&gt;The functions &lt;span class="inlineCode"&gt;sun&lt;/span&gt; and &lt;span class="inlineCode"&gt;moon&lt;/span&gt; are'</span>
+            + <span class="string">' actually a &lt;b&gt;wrapper&lt;/b&gt; around the function &lt;span class="inlineCode"&gt;orb&lt;/span&gt; that passes a &lt;b&gt;parameter&lt;/b&gt; in to tell it what colour to draw the ball. You could make the sun any colour you like! Wrapper functions are great for &lt;b&gt;composing functionality&lt;/b&gt; - making something complicated out of lots of simple things.'</span>
+            + <span class="string">'&lt;/div&gt;'</span>,
+    sampleCode: <span class="string">"orb('red');\n"</span>,
+    testConditions: <span class="keyword">function</span>(config) {
+        <span class="keyword">return</span> config.orb === <span class="string">'green'</span>
+            &amp;&amp; config.timeOfDay === <span class="string">'day'</span>;
+    },
+    completionNotes: <span class="string">'orb(\'green\');'</span>
+},{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>An exercise</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    title: <span class="string">'Variable birds'</span>,
+    helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you show 5 birds?&lt;/div&gt;'</span>
+            + <span class="string">'&lt;div class="alert alert-info"&gt;The variable &lt;span class="inlineCode"&gt;birds&lt;/span&gt; sets how many birds to show. You can show up to 6 birds.'</span>
+            + <span class="string">'&lt;/div&gt;'</span>,
+    sampleCode: <span class="string">"var birds = 3;\n"</span>,
+    testConditions: <span class="keyword">function</span>(config) {
+        <span class="keyword">return</span> config.birds === <span class="number">5</span>;
+    },
+    completionNotes: <span class="string">'var birds = 5;'</span>
+},{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>An exercise - this one tests to see if the user can show plant a tree
+at a certain location</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    title: <span class="string">'Plant a tree'</span>,
+    helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you plan a tree 100 pixels from the left and 200 pixels from the top?&lt;/div&gt;'</span>
+        + <span class="string">'&lt;div class="alert alert-info"&gt;You can plant a tree by &lt;b&gt;calling&lt;/b&gt; the &lt;b class="inlineCode"&gt;tree&lt;/b&gt; function. You can tell the computer WHERE to plant the tree by using the parameters of tree.&lt;br/&gt;&lt;br/&gt;The first parameter is how many pixels from the LEFT of the screen. The second parameter is how many pixels from the TOP of the screen (Cartesian co-ordinates).&lt;/div&gt;'</span>,
+    sampleCode: <span class="string">"tree(130, 100);\n"</span>,
+    testConditions: <span class="keyword">function</span>(config) {
+        <span class="keyword">return</span> config.treesPlanted &gt; <span class="number">0</span> &amp;&amp; config.treePlantedAt100200;
+    },
+    completionNotes: <span class="string">'tree(100, 200);'</span>
+},{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>An exercise - this one tests to see if the user can show plant 5 trees
+by calling a function multiple times</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    title: <span class="string">'Plant 5 trees'</span>,
+    helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you plant 5 trees in different places?&lt;/div&gt;'</span>
+        + <span class="string">'&lt;div class="alert alert-info"&gt;The function &lt;span class="inlineCode"&gt;tree&lt;/span&gt;'</span>
+                + <span class="string">' takes two &lt;b&gt;arguments&lt;/b&gt; also known as &lt;b&gt;parameters&lt;/b&gt;. They are both &lt;b&gt;integers&lt;/b&gt; which means "whole numbers". You can plant as many as you like - the function can be called as often as you want.'</span>
+                + <span class="string">' &lt;/div&gt;'</span>,
+    sampleCode: <span class="string">"tree(40, 150);\ntree(20, 170);\ntree(240, 110);\n"</span>,
+    testConditions: <span class="keyword">function</span>(config) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>make sure trees are planted in 5 unique locations</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">return</span> config.treesPlanted === <span class="number">5</span> &amp;&amp; config.treesPlantedInDifferentPlaces;
+    },
+    completionNotes: <span class="string">"tree(40, 150);"</span>
+},{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>An exercise - can the user draw multiple trees in a loop?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    title: <span class="string">'Loopy for trees'</span>,
+    helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you plant 10 trees using a loop?&lt;/div&gt;'</span>
+            + <span class="string">'&lt;div class="alert alert-info"&gt;You can use a &lt;span class="inlineCode"&gt;for&lt;/span&gt; loop and a little bit of simple maths to draw a row of trees.'</span>
+            +  <span class="string">'&lt;/div&gt;'</span>,
+    sampleCode: <span class="string">"var treesToPlant = 4;"</span>
+            + <span class="string">"\nvar i = 0;"</span>
+            + <span class="string">"\nwhile (i &lt; treesToPlant) {"</span>
+            + <span class="string">"\n    var left = i * (SCREEN_WIDTH / treesToPlant);"</span>
+            + <span class="string">"\n    tree(left, 180);"</span>
+            + <span class="string">"\n    i = i + 1;"</span>
+            + <span class="string">"\n}\n"</span>,
+    testConditions: <span class="keyword">function</span>(config) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Note that the test conditions are not sophisticated enough to truly
+detect that a loop has been used. In the interests of keeping the code
+light, we didn&#39;t go too far with that</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">return</span> config.treesPlanted === <span class="number">10</span>;
+    },
+    completionNotes: <span class="string">"\nwhile (i &lt; treesToPlant) { }"</span>
+},{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>An exercise - can the user employ and adjust randomness?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    title: <span class="string">'Random trees'</span>,
+    helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you work out how to make tree placement more random?&lt;/div&gt;'</span>
+                + <span class="string">'&lt;div class="alert alert-info"&gt;We use a &lt;b&gt;constant&lt;/b&gt;, &lt;span class="inlineCode"&gt;SCREEN_WIDTH&lt;/span&gt;, so we don\'t have to write \'400\' every time we want to specify the width of the viewport. This is called &lt;b&gt;avoiding magic numbers&lt;/b&gt; - magic is not good in programming! We like things to be clear!&lt;br/&gt;&lt;br/&gt;'</span>
+                + <span class="string">' You could try doing a few things like adjust the number of trees to plant, or'</span>
+                + <span class="string">' adjusting the distance of each tree from the top. Here, we\'ve randomised them.'</span>,
+    sampleCode: <span class="string">"var treesToPlant = 7;"</span>
+                + <span class="string">"\nvar randomness = 30;"</span>
+                + <span class="string">"\nwhile (i &lt; treesToPlant) {"</span>
+                + <span class="string">"\n    var left = i * (SCREEN_WIDTH / treesToPlant);"</span>
+                + <span class="string">"\n    tree(left, 150 + Math.floor(Math.random() * randomness));"</span>
+                + <span class="string">"\n    i = i + 1;"</span>
+                + <span class="string">"\n}\n"</span>,
+    testConditions: <span class="keyword">function</span>(config) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Note that the test conditions are not sophisticated enough to truly
+detect that randomness has been used. In the interests of keeping the code
+light, we didn&#39;t go too far with that</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">return</span> config.treesPlanted === <span class="number">7</span>;
+    },
+    completionNotes: <span class="string">'Math.random()'</span>
+},{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>An exercise - can the user make it night time?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    title: <span class="string">'Make it night time!'</span>,
+    helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you make it dark?&lt;/div&gt;'</span>
+        + <span class="string">'&lt;div class="alert alert-info"&gt; You can make it night time by &lt;b&gt;calling&lt;/b&gt; the &lt;b&gt;function&lt;/b&gt; &lt;span class="inlineCode"&gt;settime&lt;/span&gt; and &lt;b&gt;passing in&lt;/b&gt; the &lt;b&gt;parameter&lt;/b&gt; \'night\'.&lt;/div&gt;'</span>
+        + <span class="string">'&lt;div class="alert alert-warning"&gt;You need to make sure that &lt;span class="inlinecode"&gt;settime&lt;/span&gt; is &lt;b&gt;called&lt;/b&gt;'</span>
+        + <span class="string">' before any other code, otherwise it could end up being displayed on top of trees!'</span>
+        + <span class="string">' This is because code &lt;b&gt;executes&lt;/b&gt; in the order it is written in.&lt;/div&gt;'</span>,
+    sampleCode: <span class="string">"settime('night');\n"</span>,
+    testConditions: <span class="keyword">function</span>(config) {
+        <span class="keyword">return</span> config.timeOfDay === <span class="string">'night'</span>;
+    },
+    completionNotes: <span class="string">"settime('night');"</span>
+},{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Free play - let the user loose on Canvas!</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    title: <span class="string">'Using Canvas'</span>,
+    helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you change the colours? Can you add more colour stops?&lt;/div&gt;'</span>
+        + <span class="string">'&lt;div class="alert alert-info"&gt;Under the hood, the &lt;span class="inlineCode"&gt;settime&lt;/span&gt; function'</span>
+        + <span class="string">' uses something called the &lt;a target="_BLANK" href="http://www.html5canvastutorials.com/"&gt;canvas&lt;/a&gt;.'</span>
+        + <span class="string">' You can draw onto this canvas in a variety of ways!&lt;br/&gt;&lt;br/&gt;Get your Google on and work out how to change the sky colour gradients! You can draw anything on a Canvas!&lt;/div&gt;'</span>,
+    sampleCode: <span class="string">"var grad = context.createLinearGradient(0, 0, 0, SCREEN_HEIGHT);"</span>
+                + <span class="string">"\ngrad.addColorStop(0, 'red');"</span>
+                + <span class="string">"\ngrad.addColorStop(0.2, 'orange');"</span>
+                + <span class="string">"\ngrad.addColorStop(0.5, 'white');"</span>
+                + <span class="string">"\ngrad.addColorStop(0.8, 'orange');"</span>
+                + <span class="string">"\ngrad.addColorStop(1, 'red');"</span>
+                + <span class="string">"\ncontext.fillStyle = grad;"</span>
+                + <span class="string">"\ncontext.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);\n"</span>,
+    testConditions: <span class="keyword">function</span>(config) {
+        <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// this is the final test</span>
+    },
+    completionNotes: <span class="literal">null</span>
+}];</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

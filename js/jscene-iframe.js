@@ -31,8 +31,10 @@ var testConditions = {
     'timeOfDay': null,
     'treesPlanted': 0,
     'treePlantedAt100200': false,
-    'valid': false // set in wrapper function in jscene.js.
+    'valid': false, // set in wrapper function in jscene.js.
                    // this is only set if the script appears to be syntax error free
+    'birds': 0,
+    'treesPlantedInDifferentPlaces': true
 };
 
 // here are the custom functions! These can be called by the user at any
@@ -79,6 +81,8 @@ settime('day');
 // This function allows the user to plant a tree. The user can specify where the tree
 // is planted.
 
+var plantedTreeLocations = [];
+
 /**
  * Plant a tree - render a tree on the screen
  *
@@ -117,6 +121,14 @@ function tree(left, top) {
     // not the user has "passed" certain exercises
     testConditions.treePlantedAt100200 = (left === 100 && top === 200);
     testConditions.treesPlanted++;
+
+    for(var i = 0; i < plantedTreeLocations.length; i++) {
+        if(plantedTreeLocations[i][0] === left
+            && plantedTreeLocations[i][1] === top) {
+            testConditions.treesPlantedInDifferentPlaces = false;
+        }
+    }
+    plantedTreeLocations.push([left, top]);
 }
 
 // Function that can display a quarter of a ball in the top right
@@ -175,3 +187,24 @@ function moon() {
 function secret() {
     alert("You found the secret function! You have great promise! Keep it up! Tell the Box UK guys the code is 'D L N'");
 }
+
+if (typeof birds === "undefined") {
+    var birds = 0;
+}
+
+function drawBird(i) {
+    var startX = (i * 60) + 10;
+    var startY = ((i % 3)  * 10) + 40 ;
+
+    context.strokeStyle = "#222222";
+    context.lineWidth = 3;
+    context.beginPath();
+    context.moveTo(startX, startY);
+    context.lineTo(startX + 20, startY + 10);
+    context.lineTo(startX + 40, startY);
+    context.stroke();
+}
+
+// Support ctx as an alias for context. This makes some online
+// examples easier to paste.
+var ctx = context;

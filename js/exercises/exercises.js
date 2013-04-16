@@ -15,7 +15,8 @@ window.jscene.exercises = [{
     testConditions: function(config) {
         return config.orb === null
             && config.timeOfDay === 'day';
-    }
+    },
+    completionNotes: null
 }, {
     // An exercise - this one tests to see if the user can make the sun shine
     title: 'Sun shine',
@@ -25,7 +26,8 @@ window.jscene.exercises = [{
     testConditions: function(config) {
         return config.orb === 'yellow'
             && config.timeOfDay === 'day';
-    }
+    },
+    completionNotes: 'sun();'
 },{
     // An exercise - this one tests to see if the user can show the moon
     title: 'Moon time!',
@@ -36,7 +38,8 @@ window.jscene.exercises = [{
     testConditions: function(config) {
         return config.orb === 'lightgray'
             && config.timeOfDay === 'day';
-    }
+    },
+    completionNotes: 'moon();'
 },{
     // An exercise - this one tests to see if the user can show green sunshine
     // by editing parameters of a function
@@ -49,7 +52,19 @@ window.jscene.exercises = [{
     testConditions: function(config) {
         return config.orb === 'green'
             && config.timeOfDay === 'day';
-    }
+    },
+    completionNotes: 'orb(\'green\');'
+},{
+    // An exercise
+    title: 'Variable birds',
+    helpText: '<div class="alert alert-success">Can you show 5 birds?</div>'
+            + '<div class="alert alert-info">The variable <span class="inlineCode">birds</span> sets how many birds to show. You can show up to 6 birds.'
+            + '</div>',
+    sampleCode: "var birds = 3;\n",
+    testConditions: function(config) {
+        return config.birds === 5;
+    },
+    completionNotes: 'var birds = 5;'
 },{
     // An exercise - this one tests to see if the user can show plant a tree
     // at a certain location
@@ -59,19 +74,22 @@ window.jscene.exercises = [{
     sampleCode: "tree(130, 100);\n",
     testConditions: function(config) {
         return config.treesPlanted > 0 && config.treePlantedAt100200;
-    }
+    },
+    completionNotes: 'tree(100, 200);'
 },{
     // An exercise - this one tests to see if the user can show plant 5 trees
     // by calling a function multiple times
     title: 'Plant 5 trees',
-    helpText: '<div class="alert alert-success">Can you plant 5 trees?</div>'
+    helpText: '<div class="alert alert-success">Can you plant 5 trees in different places?</div>'
         + '<div class="alert alert-info">The function <span class="inlineCode">tree</span>'
-                + ' take two <b>arguments</b> also known as <b>parameters</b>. They are both <b>integers</b> which means "whole numbers". You can plant as many as you like - the function can be called as often as you want.'
+                + ' takes two <b>arguments</b> also known as <b>parameters</b>. They are both <b>integers</b> which means "whole numbers". You can plant as many as you like - the function can be called as often as you want.'
                 + ' </div>',
     sampleCode: "tree(40, 150);\ntree(20, 170);\ntree(240, 110);\n",
     testConditions: function(config) {
-        return config.treesPlanted === 5;
-    }
+        // make sure trees are planted in 5 unique locations
+        return config.treesPlanted === 5 && config.treesPlantedInDifferentPlaces;
+    },
+    completionNotes: "tree(40, 150);"
 },{
     // An exercise - can the user draw multiple trees in a loop?
     title: 'Loopy for trees',
@@ -81,7 +99,7 @@ window.jscene.exercises = [{
     sampleCode: "var treesToPlant = 4;"
             + "\nvar i = 0;"
             + "\nwhile (i < treesToPlant) {"
-            + "\n    var left = (i * (SCREEN_WIDTH / treesToPlant));"
+            + "\n    var left = i * (SCREEN_WIDTH / treesToPlant);"
             + "\n    tree(left, 180);"
             + "\n    i = i + 1;"
             + "\n}\n",
@@ -90,7 +108,8 @@ window.jscene.exercises = [{
         // detect that a loop has been used. In the interests of keeping the code
         // light, we didn't go too far with that
         return config.treesPlanted === 10;
-    }
+    },
+    completionNotes: "\nwhile (i < treesToPlant) { }"
 },{
     // An exercise - can the user employ and adjust randomness?
     title: 'Random trees',
@@ -101,7 +120,7 @@ window.jscene.exercises = [{
     sampleCode: "var treesToPlant = 7;"
                 + "\nvar randomness = 30;"
                 + "\nwhile (i < treesToPlant) {"
-                + "\n    var left = (i * (SCREEN_WIDTH / treesToPlant));"
+                + "\n    var left = i * (SCREEN_WIDTH / treesToPlant);"
                 + "\n    tree(left, 150 + Math.floor(Math.random() * randomness));"
                 + "\n    i = i + 1;"
                 + "\n}\n",
@@ -110,7 +129,8 @@ window.jscene.exercises = [{
         // detect that randomness has been used. In the interests of keeping the code
         // light, we didn't go too far with that
         return config.treesPlanted === 7;
-    }
+    },
+    completionNotes: 'Math.random()'
 },{
     // An exercise - can the user make it night time?
     title: 'Make it night time!',
@@ -122,7 +142,8 @@ window.jscene.exercises = [{
     sampleCode: "settime('night');\n",
     testConditions: function(config) {
         return config.timeOfDay === 'night';
-    }
+    },
+    completionNotes: "settime('night');"
 },{
     // Free play - let the user loose on Canvas!
     title: 'Using Canvas',
@@ -140,5 +161,6 @@ window.jscene.exercises = [{
                 + "\ncontext.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);\n",
     testConditions: function(config) {
         return false; // this is the final test
-    }
+    },
+    completionNotes: null
 }];

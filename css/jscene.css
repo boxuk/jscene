@@ -68,3 +68,12 @@ button, .btn {
 .alert-success {
    font-weight: bold;
 }
+
+pre.thingUsed {
+    display: inline;
+    margin-right: 4px;
+}
+#thingsUsedWrapper {
+    display: none;
+    padding: 20px;
+}

@@ -74,18 +74,31 @@ $(function() {
         // This probably warrants further investigation!
         if(getInternetExplorerVersion() === 9) {
             s += "  <script type=\"text/javascript\" defer=\"defer\" src=\"js/jscene-iframe.js\"></script>\n"
-              + "  <script type=\"text/javascript\" defer=\"defer\">try {\n";
+              + "  <script type=\"text/javascript\" defer=\"defer\">";
         } else {
             s += "  <script type=\"text/javascript\" src=\"js/jscene-iframe.js\"></script>\n"
-              + "  <script type=\"text/javascript\"> try {\n";
+              + "  <script type=\"text/javascript\">";
+
         }
+        s += "var birds = 0;"
+          +  "try {\n"
+        ;
 
         // Add the user's javascript to our variable
         s += userCode;
 
         // If the code is valid, set testConditions.valid to true - see [jscene-iframe.js
         // for more information on this
-        s += "\n    testConditions.valid = true;\n} catch(e) {  }\n";
+        s += "\n    testConditions.valid = true;\n"
+        s += "\n} catch(e) {";
+        s += "\n    console.log(\"ERROR PARSING\");";
+        s += "\n    console.log(e);";
+        s += "\n}\n";
+
+        s += "\nfor(var i = 0; i < birds; i++) {"
+          +  "\n    drawBird(i);"
+          +  "\n}"
+          +  "\ntestConditions.birds = birds;";
 
         // When the iframe loads, it should call the repaint listener and tell
         // the code in jscene.js "hey, here are the test conditions" so that
@@ -250,13 +263,35 @@ $(function() {
         }
     }
 
+
+    // collection of things the user has used - functions, code snippets, etc -
+    // for easy referencing
+
+    var thingsUsed = [];
+
     // Function that advances the exercise the user is looking at. Symmetric to prevExercise
 
     /**
-     * advance the exercise the user is looking at. Symmetric to prevExercise
+     * advance the exercise the user is looking at. Symmetric to prevExercise.
      * @returns {null}
      */
     function nextExercise() {
+        if(exercisePtr > 0) {
+            var config = exercices[exercisePtr];
+            thingsUsed[exercisePtr] = config.completionNotes;
+
+            var s = "";
+            for (var i = 0; i < thingsUsed.length; i++) {
+                if(thingsUsed[i] !== null && thingsUsed[i] !== undefined) {
+                    s += "<pre class='thingUsed'>"  + thingsUsed[i] + '</pre>';
+                }
+            }
+            $('#thingsUsed').html(s);
+            if(thingsUsed.length > 1) {
+                $('#thingsUsedWrapper').fadeIn('slow');
+            }
+        }
+
         // If we're not at the end of the exercise list, then go to the next
         // exercise
         if(exercisePtr < (exercices.length - 1)) {
@@ -371,5 +406,5 @@ $(function() {
     // Make the nextTip function globally accessible. This is useful for debugging
     // so, for example, you can call nextTip(); in the browser console to skip
     // an exercise.
-    window.nextTip = nextExercise;
+    window.nextEx = nextExercise;
 });

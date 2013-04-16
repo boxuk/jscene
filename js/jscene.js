@@ -113,7 +113,10 @@ $(function() {
     function updatePreview() {
 
         // Get the code that the user has written
-        var newCode = editor.getValue();
+        var newCodeCs = editor.getValue();
+        var newCode = CoffeeScript.compile(newCodeCs, {
+            bare: true
+          });
 
         // Have a go at parsing that code. Is it valid code?
         try {
@@ -191,7 +194,7 @@ $(function() {
         title: 'Sun shine',
         helpText: '<div class="alert alert-success">Can you show the sun?</div>'
         +  '<div class="alert alert-info">You can show the sun by calling the <span class="inlineCode">showSun</span> function that has already been defined for you.</div>',
-        sampleCode: "// show the sun\nshowSun();\n",
+        sampleCode: "\ndo showSun\n",
         testConditions: function(config) {
             return config.ballInSky === 'yellow'
                 && config.timeOfDay === 'day';
@@ -202,7 +205,7 @@ $(function() {
         helpText: '<div class="alert alert-success">Can you show the moon?</div>'
             + '<div class="alert alert-info">You can show the moon by calling the <span class="inlineCode">showMoon</span> function that has already been defined for you.</div>'
             + '<div class="alert alert-warning">Notice that if you call <span class="inlineCode">showMoon();</span> after other functions, it can draw over the top of what\'s underneath! This is due to the order that the code is executed in, so put it at the top of your code.</div>',
-        sampleCode: "// show the sun\nshowMoon();\n",
+        sampleCode: "\ndo showMoon\n",
         testConditions: function(config) {
             return config.ballInSky === 'lightgray'
                 && config.timeOfDay === 'day';
@@ -215,7 +218,7 @@ $(function() {
                 + '<div class="alert alert-info">The functions <span class="inlineCode">showSun</span> and <span class="inlineCode">showMoon</span> are'
                 + ' actually a <b>wrapper</b> around the function <span class="inlineCode">showBallInSky</span> that passes a <b>parameter</b> in to tell it what colour to draw the ball. You could make the sun any colour you like! Wrapper functions are great for <b>composing functionality</b> - making something complicated out of lots of simple things.'
                 + '</div>',
-        sampleCode: "// show a red ball\nshowBallInSky('red');\n",
+        sampleCode: "do showBallInSky 'red'\n",
         testConditions: function(config) {
             return config.ballInSky === 'green'
                 && config.timeOfDay === 'day';
@@ -226,7 +229,7 @@ $(function() {
         title: 'Plant a tree',
         helpText: '<div class="alert alert-success">Can you plan a tree 100 pixels from the left and 200 pixels from the top?</div>'
             + '<div class="alert alert-info">You can plant a tree by <b>calling</b> the <b class="inlineCode">plantTree</b> function. You can tell the computer WHERE to plant the tree by using the parameters of plantTree.<br/><br/>The first parameter is how many pixels from the LEFT of the screen. The second parameter is how many pixels from the TOP of the screen (Cartesian co-ordinates).</div>',
-        sampleCode: "// plant a tree 130 pixels from the left\n// and 100 pixels from the top\nplantTree(130, 100);\n",
+        sampleCode: "do plantTree 130, 100\n",
         testConditions: function(config) {
             return config.treesPlanted > 0 && config.treePlantedAt100200;
         }
@@ -238,7 +241,7 @@ $(function() {
             + '<div class="alert alert-info">The function <span class="inlineCode">plantTree</span>'
                     + ' take two <b>arguments</b> also known as <b>parameters</b>. They are both <b>integers</b> which means "whole numbers". You can plant as many as you like - the function can be called as often as you want.'
                     + ' </div>',
-        sampleCode: "plantTree(40, 150);\nplantTree(20, 170);\nplantTree(240, 110);\n",
+        sampleCode: "do plantTree 40, 150\ndo plantTree 20, 170\ndo plantTree 240, 110\n",
         testConditions: function(config) {
             return config.treesPlanted === 5;
         }
@@ -249,10 +252,10 @@ $(function() {
                 + '<div class="alert alert-info">You can use a <span class="inlineCode">for</span> loop and a little bit of simple maths to draw a row of trees.'
                 +  '</div>',
         sampleCode: "// plant a row of trees"
-                + "\nvar treesToPlant = 4;"
+                + "\nvar treesToPlant = 4"
                 + "\nfor (var i = 0; i < treesToPlant; i++) {"
-                + "\n    var left = (i * (SCREEN_WIDTH / treesToPlant));"
-                + "\n    plantTree(left, 180)"
+                + "\n    var left = (i * (SCREEN_WIDTH / treesToPlant))"
+                + "\n    do plantTree left, 180 "
                 + "\n}\n",
         testConditions: function(config) {
             // Note that the test conditions are not sophisticated enough to truly
@@ -268,11 +271,11 @@ $(function() {
                     + ' You could try doing a few things like adjust the number of trees to plant, or'
                     + ' adjusting the distance of each tree from the top. Here, we\'ve randomised them.',
         sampleCode: "// plant a row of trees"
-                    + "\nvar treesToPlant = 7;"
-                    + "\nvar randomness = 30;"
+                    + "\nvar treesToPlant = 7"
+                    + "\nvar randomness = 30"
                     + "\nfor (var i = 0; i < treesToPlant; i++) {"
-                    + "\n    var left = (i * (SCREEN_WIDTH / treesToPlant));"
-                    + "\n    plantTree(left, 150 + Math.floor(Math.random() * randomness));"
+                    + "\n    var left = (i * (SCREEN_WIDTH / treesToPlant))"
+                    + "\n    do plantTree left, 150 + Math.floor(Math.random() * randomness)"
                     + "\n}\n",
         testConditions: function(config) {
             // Note that the test conditions are not sophisticated enough to truly
@@ -288,7 +291,7 @@ $(function() {
             + '<div class="alert alert-warning">You need to make sure that <span class="inlinecode">setTimeOfDay</span> is <b>called</b>'
             + ' before any other code, otherwise it could end up being displayed on top of trees!'
             + ' This is because code <b>executes</b> in the order it is written in.</div>',
-        sampleCode: "// Make it night time\nsetTimeOfDay('night');\n",
+        sampleCode: "do setTimeOfDay 'night'\n",
         testConditions: function(config) {
             return config.timeOfDay === 'night';
         }
@@ -299,14 +302,14 @@ $(function() {
             + '<div class="alert alert-info">Under the hood, the <span class="inlineCode">setTimeOfDay</span> function'
             + ' uses something called the <a target="_BLANK" href="http://www.html5canvastutorials.com/">canvas</a>.'
             + ' You can draw onto this canvas in a variety of ways!<br/><br/>Get your Google on and work out how to change the sky colour gradients! You can draw anything on a Canvas!</div>',
-        sampleCode: "var grad = context.createLinearGradient(0, 0, 0, SCREEN_HEIGHT);"
-                    + "\ngrad.addColorStop(0, 'red');"
-                    + "\ngrad.addColorStop(0.2, 'orange');"
-                    + "\ngrad.addColorStop(0.5, 'white');"
-                    + "\ngrad.addColorStop(0.8, 'orange');"
-                    + "\ngrad.addColorStop(1, 'red');"
-                    + "\ncontext.fillStyle = grad;"
-                    + "\ncontext.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);\n",
+        sampleCode: "grad = context.createLinearGradient 0, 0, 0, SCREEN_HEIGHT"
+                    + "\ngrad.addColorStop 0, 'red'"
+                    + "\ngrad.addColorStop 0.2, 'orange'"
+                    + "\ngrad.addColorStop 0.5, 'white'"
+                    + "\ngrad.addColorStop 0.8, 'orange'"
+                    + "\ngrad.addColorStop 1, 'red'"
+                    + "\ncontext.fillStyle = grad"
+                    + "\ncontext.fillRect 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT\n",
         testConditions: function(config) {
             return false; // this is the final test
         }
@@ -514,3 +517,6 @@ $(function() {
     // an exercise.
     window.nextTip = nextExercise;
 });
+
+// stubs
+function showSun() {}

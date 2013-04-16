@@ -81,11 +81,11 @@
                                     <div id="panelYourCode">
 
                                     <textarea id="code" name="code">
-// your code goes here!
-// Any lines that start with // are ignored
-
-// let's make it a sunny day. Try removing all this text!
-showSun();
+# your code goes here!
+# Any lines that start with # are ignored
+#
+# let's make it a sunny day. Try removing all this text!
+do showSun
 </textarea>
                                     <center>
                                         <span id="code-valid" class="label label-success" title="This means that your code is valid JavaScript. Good show!"><i class="icon-ok icon-white"></i>Code is valid</span>
@@ -133,10 +133,16 @@ showSun();
         </div>
         <script src="lib/jquery/jquery-1.9.1.min.js"></script>
         <script src="lib/codemirror-3.1/lib/codemirror.js"></script>
-        <script src="lib/codemirror-3.1/mode/javascript/javascript.js"></script>
+<!--        <script src="lib/codemirror-3.1/mode/javascript/javascript.js"></script>-->
+        <script src="lib/codemirror-3.1/mode/coffeescript/coffeescript.js"></script>
         <script src="lib/codemirror-3.1/addon/edit/matchbrackets.js"></script>
         <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+        <script src="lib/coffeescript.js"></script>
 
         <script src="js/jscene.js"></script>
+          <script type="text/coffeescript">
+            window.x = ->
+              CoffeeScript.compile "source", bare: on
+              </script>
     </body>
 </html>

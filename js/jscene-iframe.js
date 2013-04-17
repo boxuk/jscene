@@ -30,7 +30,7 @@ var testConditions = {
     'orb': null,
     'timeOfDay': null,
     'treesPlanted': 0,
-    'treePlantedAt100200': false,
+    'treePlantedAt100160': false,
     'valid': false, // set in wrapper function in jscene.js.
                    // this is only set if the script appears to be syntax error free
     'birds': 0,
@@ -119,7 +119,7 @@ function tree(left, top) {
 
     // Update the test conditions so that jscene.js can figure out whether or
     // not the user has "passed" certain exercises
-    testConditions.treePlantedAt100200 = (left === 100 && top === 200);
+    testConditions.treePlantedAt100160 = (left === 100 && top === 160);
     testConditions.treesPlanted++;
 
     for(var i = 0; i < plantedTreeLocations.length; i++) {

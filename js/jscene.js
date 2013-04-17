@@ -72,7 +72,8 @@ $(function() {
 
         // On Internet Explorer 9, we have to defer the loading of the JavaScript.
         // This probably warrants further investigation!
-        if(getInternetExplorerVersion() === 9) {
+        var iev = getInternetExplorerVersion();
+        if(iev === 9) {
             s += "  <script type=\"text/javascript\" defer=\"defer\" src=\"js/jscene-iframe.js\"></script>\n"
               + "  <script type=\"text/javascript\" defer=\"defer\">";
         } else {

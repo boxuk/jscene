@@ -69,13 +69,13 @@ window.jscene.exercises = [{
     // An exercise - this one tests to see if the user can show plant a tree
     // at a certain location
     title: 'Plant a tree',
-    helpText: '<div class="alert alert-success">Can you plan a tree 100 pixels from the left and 200 pixels from the top?</div>'
+    helpText: '<div class="alert alert-success">Can you plan a tree 100 pixels from the left and 160 pixels from the top?</div>'
         + '<div class="alert alert-info">You can plant a tree byusing the <b class="inlineCode">tree</b> function. You can tell the computer WHERE to plant the tree by using the parameters of tree.<br/><br/>The first parameter is how many pixels from the LEFT of the screen. The second parameter is how many pixels from the TOP of the screen.</div>',
     sampleCode: "tree(130, 100);\n",
     testConditions: function(config) {
-        return config.treesPlanted > 0 && config.treePlantedAt100200;
+        return config.treesPlanted > 0 && config.treePlantedAt100160;
     },
-    completionNotes: 'tree(100, 200);'
+    completionNotes: 'tree(100, 160);'
 },{
     // An exercise - this one tests to see if the user can show plant 5 trees
     // by calling a function multiple times

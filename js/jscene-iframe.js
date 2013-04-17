@@ -34,7 +34,8 @@ var testConditions = {
     'valid': false, // set in wrapper function in jscene.js.
                    // this is only set if the script appears to be syntax error free
     'birds': 0,
-    'treesPlantedInDifferentPlaces': true
+    'treesPlantedInDifferentPlaces': true,
+    'passedTests': true
 };
 
 // here are the custom functions! These can be called by the user at any
@@ -48,19 +49,28 @@ var testConditions = {
 
 /* Custom functions */
 
+// If the user's work is being "unit tested" we might want to block certain
+// things, like changing the visual time of day
+var blockTimeChanges = false;
+
 // This function allows the user to set the time of day to night
 // time. The only time it supports is 'night' because 'day' mode
 // is drawn by default.
 
 /**
  * Can set the time of day to night
- * @param {String} time e.g. "nighShow the moon in the top right cornert"
+ *
+ * @param {String} nightOrday e.g. "night" Show the moon in the top right corner
  *
  * @returns {null}
  */
-function settime(time) {
+function settime(nightOrDay) {
+    if(blockTimeChanges) {
+        return;
+    }
+
     var skyGrad = context.createLinearGradient(0,0,0,150);
-    if(time === 'night') {
+    if(nightOrDay === 'night') {
         skyGrad.addColorStop(0, '#000000');
         skyGrad.addColorStop(1, '#222222');
 
@@ -71,8 +81,12 @@ function settime(time) {
     }
     context.fillStyle = skyGrad;
     context.fillRect(0, 0, SCREEN_WIDTH, 150);
+    testConditions.timeOfDay = nightOrDay;
 
-    testConditions.timeOfDay = time;
+}
+
+function gettime() {
+    return testConditions.timeOfDay;
 }
 
 // Make sure that the time of day has been set
@@ -204,3 +218,12 @@ function drawBird(i) {
 // Support ctx as an alias for context. This makes some online
 // examples easier to paste.
 var ctx = context;
+
+function runUnitTest(testCode) {
+    testConditions.passedTests = false;
+    var success = true;
+    eval(testCode);
+    if(success) {
+        testConditions.passedTests = true;
+    }
+}

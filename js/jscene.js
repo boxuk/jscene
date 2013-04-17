@@ -89,7 +89,7 @@ $(function() {
 
         // If the code is valid, set testConditions.valid to true - see [jscene-iframe.js
         // for more information on this
-        s += "\n    testConditions.valid = true;\n"
+        s += "\n    testConditions.valid = true;\n";
         s += "\n} catch(e) {";
         s += "\n    console.log(\"ERROR PARSING\");";
         s += "\n    console.log(e);";

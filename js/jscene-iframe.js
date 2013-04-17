@@ -1,4 +1,4 @@
-/*global alert*/
+/*global alert, birds*/
 
 // This code gets included in the iframe "preview" panel
 //
@@ -186,10 +186,6 @@ function moon() {
  */
 function secret() {
     alert("You found the secret function! You have great promise! Keep it up! Tell the Box UK guys the code is 'D L N'");
-}
-
-if (typeof birds === "undefined") {
-    var birds = 0;
 }
 
 function drawBird(i) {

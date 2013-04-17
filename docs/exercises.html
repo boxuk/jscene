@@ -156,7 +156,7 @@ If this function returns true, then we can pass on to the next exercise!</p>
             
             <div class="content"><div class='highlight'><pre>    title: <span class="string">'Sun shine'</span>,
     helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you show the sun?&lt;/div&gt;'</span>
-    +  <span class="string">'&lt;div class="alert alert-info"&gt;You can show the sun by calling the &lt;span class="inlineCode"&gt;sun&lt;/span&gt; function that has already been defined for you.&lt;/div&gt;'</span>,
+    +  <span class="string">'&lt;div class="alert alert-info"&gt;You can show the sun by using the &lt;span class="inlineCode"&gt;sun&lt;/span&gt; function that has already been defined for you.&lt;/div&gt;'</span>,
     sampleCode: <span class="string">"sun();\n"</span>,
     testConditions: <span class="keyword">function</span>(config) {
         <span class="keyword">return</span> config.orb === <span class="string">'yellow'</span>
@@ -180,8 +180,8 @@ If this function returns true, then we can pass on to the next exercise!</p>
             
             <div class="content"><div class='highlight'><pre>    title: <span class="string">'Moon time!'</span>,
     helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you show the moon?&lt;/div&gt;'</span>
-        + <span class="string">'&lt;div class="alert alert-info"&gt;You can show the moon by calling the &lt;span class="inlineCode"&gt;moon&lt;/span&gt; function that has already been defined for you.&lt;/div&gt;'</span>
-        + <span class="string">'&lt;div class="alert alert-warning"&gt;Notice that if you call &lt;span class="inlineCode"&gt;moon();&lt;/span&gt; after other functions, it can draw over the top of what\'s underneath! This is due to the order that the code is executed in, so put it at the top of your code.&lt;/div&gt;'</span>,
+        + <span class="string">'&lt;div class="alert alert-info"&gt;You can show the moon by using the &lt;span class="inlineCode"&gt;moon&lt;/span&gt; function that has already been defined for you.&lt;/div&gt;'</span>
+        + <span class="string">'&lt;div class="alert alert-warning"&gt;Notice that if you use &lt;span class="inlineCode"&gt;moon();&lt;/span&gt; after other functions, it can draw over the top of what\'s underneath! This is due to the order that the code is run in, so put it at the top of your code.&lt;/div&gt;'</span>,
     sampleCode: <span class="string">"moon();\n"</span>,
     testConditions: <span class="keyword">function</span>(config) {
         <span class="keyword">return</span> config.orb === <span class="string">'lightgray'</span>
@@ -207,7 +207,7 @@ by editing parameters of a function</p>
             <div class="content"><div class='highlight'><pre>    title: <span class="string">'Green sunshine'</span>,
     helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you turn the sun green?&lt;/div&gt;'</span>
             + <span class="string">'&lt;div class="alert alert-info"&gt;The functions &lt;span class="inlineCode"&gt;sun&lt;/span&gt; and &lt;span class="inlineCode"&gt;moon&lt;/span&gt; are'</span>
-            + <span class="string">' actually a &lt;b&gt;wrapper&lt;/b&gt; around the function &lt;span class="inlineCode"&gt;orb&lt;/span&gt; that passes a &lt;b&gt;parameter&lt;/b&gt; in to tell it what colour to draw the ball. You could make the sun any colour you like! Wrapper functions are great for &lt;b&gt;composing functionality&lt;/b&gt; - making something complicated out of lots of simple things.'</span>
+            + <span class="string">' actually a &lt;b&gt;wrapper&lt;/b&gt; around the function &lt;span class="inlineCode"&gt;orb&lt;/span&gt; that passes a &lt;b&gt;parameter&lt;/b&gt; to tell it what colour to draw the ball. You could make the sun any colour you like!'</span>
             + <span class="string">'&lt;/div&gt;'</span>,
     sampleCode: <span class="string">"orb('red');\n"</span>,
     testConditions: <span class="keyword">function</span>(config) {
@@ -257,7 +257,7 @@ at a certain location</p>
             
             <div class="content"><div class='highlight'><pre>    title: <span class="string">'Plant a tree'</span>,
     helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you plan a tree 100 pixels from the left and 200 pixels from the top?&lt;/div&gt;'</span>
-        + <span class="string">'&lt;div class="alert alert-info"&gt;You can plant a tree by &lt;b&gt;calling&lt;/b&gt; the &lt;b class="inlineCode"&gt;tree&lt;/b&gt; function. You can tell the computer WHERE to plant the tree by using the parameters of tree.&lt;br/&gt;&lt;br/&gt;The first parameter is how many pixels from the LEFT of the screen. The second parameter is how many pixels from the TOP of the screen (Cartesian co-ordinates).&lt;/div&gt;'</span>,
+        + <span class="string">'&lt;div class="alert alert-info"&gt;You can plant a tree byusing the &lt;b class="inlineCode"&gt;tree&lt;/b&gt; function. You can tell the computer WHERE to plant the tree by using the parameters of tree.&lt;br/&gt;&lt;br/&gt;The first parameter is how many pixels from the LEFT of the screen. The second parameter is how many pixels from the TOP of the screen.&lt;/div&gt;'</span>,
     sampleCode: <span class="string">"tree(130, 100);\n"</span>,
     testConditions: <span class="keyword">function</span>(config) {
         <span class="keyword">return</span> config.treesPlanted &gt; <span class="number">0</span> &amp;&amp; config.treePlantedAt100200;
@@ -282,7 +282,7 @@ by calling a function multiple times</p>
             <div class="content"><div class='highlight'><pre>    title: <span class="string">'Plant 5 trees'</span>,
     helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you plant 5 trees in different places?&lt;/div&gt;'</span>
         + <span class="string">'&lt;div class="alert alert-info"&gt;The function &lt;span class="inlineCode"&gt;tree&lt;/span&gt;'</span>
-                + <span class="string">' takes two &lt;b&gt;arguments&lt;/b&gt; also known as &lt;b&gt;parameters&lt;/b&gt;. They are both &lt;b&gt;integers&lt;/b&gt; which means "whole numbers". You can plant as many as you like - the function can be called as often as you want.'</span>
+                + <span class="string">' takes two &lt;b&gt;parameters&lt;/b&gt;. They are both &lt;b&gt;whole numbers&lt;/b&gt;. You can plant as many as you like!'</span>
                 + <span class="string">' &lt;/div&gt;'</span>,
     sampleCode: <span class="string">"tree(40, 150);\ntree(20, 170);\ntree(240, 110);\n"</span>,
     testConditions: <span class="keyword">function</span>(config) {</pre></div></div>
@@ -320,7 +320,7 @@ by calling a function multiple times</p>
             
             <div class="content"><div class='highlight'><pre>    title: <span class="string">'Loopy for trees'</span>,
     helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you plant 10 trees using a loop?&lt;/div&gt;'</span>
-            + <span class="string">'&lt;div class="alert alert-info"&gt;You can use a &lt;span class="inlineCode"&gt;for&lt;/span&gt; loop and a little bit of simple maths to draw a row of trees.'</span>
+            + <span class="string">'&lt;div class="alert alert-info"&gt;You can use a &lt;span class="inlineCode"&gt;while&lt;/span&gt; loop and a little bit of simple maths to draw a row of trees.'</span>
             +  <span class="string">'&lt;/div&gt;'</span>,
     sampleCode: <span class="string">"var treesToPlant = 4;"</span>
             + <span class="string">"\nvar i = 0;"</span>
@@ -366,7 +366,7 @@ light, we didn&#39;t go too far with that</p>
             
             <div class="content"><div class='highlight'><pre>    title: <span class="string">'Random trees'</span>,
     helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you work out how to make tree placement more random?&lt;/div&gt;'</span>
-                + <span class="string">'&lt;div class="alert alert-info"&gt;We use a &lt;b&gt;constant&lt;/b&gt;, &lt;span class="inlineCode"&gt;SCREEN_WIDTH&lt;/span&gt;, so we don\'t have to write \'400\' every time we want to specify the width of the viewport. This is called &lt;b&gt;avoiding magic numbers&lt;/b&gt; - magic is not good in programming! We like things to be clear!&lt;br/&gt;&lt;br/&gt;'</span>
+                + <span class="string">'&lt;div class="alert alert-info"&gt;We use a &lt;b&gt;constant&lt;/b&gt;, &lt;span class="inlineCode"&gt;SCREEN_WIDTH&lt;/span&gt;, so we don\'t have to write \'400\' every time we want to specify the width of the scene.&lt;br/&gt;&lt;br/&gt;'</span>
                 + <span class="string">' You could try doing a few things like adjust the number of trees to plant, or'</span>
                 + <span class="string">' adjusting the distance of each tree from the top. Here, we\'ve randomised them.'</span>,
     sampleCode: <span class="string">"var treesToPlant = 7;"</span>
@@ -413,10 +413,10 @@ light, we didn&#39;t go too far with that</p>
             
             <div class="content"><div class='highlight'><pre>    title: <span class="string">'Make it night time!'</span>,
     helpText: <span class="string">'&lt;div class="alert alert-success"&gt;Can you make it dark?&lt;/div&gt;'</span>
-        + <span class="string">'&lt;div class="alert alert-info"&gt; You can make it night time by &lt;b&gt;calling&lt;/b&gt; the &lt;b&gt;function&lt;/b&gt; &lt;span class="inlineCode"&gt;settime&lt;/span&gt; and &lt;b&gt;passing in&lt;/b&gt; the &lt;b&gt;parameter&lt;/b&gt; \'night\'.&lt;/div&gt;'</span>
-        + <span class="string">'&lt;div class="alert alert-warning"&gt;You need to make sure that &lt;span class="inlinecode"&gt;settime&lt;/span&gt; is &lt;b&gt;called&lt;/b&gt;'</span>
+        + <span class="string">'&lt;div class="alert alert-info"&gt; You can make it night time by using the &lt;b&gt;function&lt;/b&gt; &lt;span class="inlineCode"&gt;settime&lt;/span&gt; and using the &lt;b&gt;parameter&lt;/b&gt; \'night\'.&lt;/div&gt;'</span>
+        + <span class="string">'&lt;div class="alert alert-warning"&gt;You need to make sure that &lt;span class="inlinecode"&gt;settime&lt;/span&gt; is used'</span>
         + <span class="string">' before any other code, otherwise it could end up being displayed on top of trees!'</span>
-        + <span class="string">' This is because code &lt;b&gt;executes&lt;/b&gt; in the order it is written in.&lt;/div&gt;'</span>,
+        + <span class="string">' This is because code runs in the order it is written in.&lt;/div&gt;'</span>,
     sampleCode: <span class="string">"settime('night');\n"</span>,
     testConditions: <span class="keyword">function</span>(config) {
         <span class="keyword">return</span> config.timeOfDay === <span class="string">'night'</span>;

@@ -47,7 +47,7 @@ Updating documentation
 
 With [Docco](http://jashkenas.github.io/docco/) installed:
 
-    docco js/*js
+    docco js/**/*js
 
 Libraries used
 --------------

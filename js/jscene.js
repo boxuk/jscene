@@ -74,18 +74,31 @@ $(function() {
         // This probably warrants further investigation!
         if(getInternetExplorerVersion() === 9) {
             s += "  <script type=\"text/javascript\" defer=\"defer\" src=\"js/jscene-iframe.js\"></script>\n"
-              + "  <script type=\"text/javascript\" defer=\"defer\">try {\n";
+              + "  <script type=\"text/javascript\" defer=\"defer\">";
         } else {
             s += "  <script type=\"text/javascript\" src=\"js/jscene-iframe.js\"></script>\n"
-              + "  <script type=\"text/javascript\"> try {\n";
+              + "  <script type=\"text/javascript\">";
+
         }
+        s += "var birds = 0;"
+          +  "try {\n"
+        ;
 
         // Add the user's javascript to our variable
         s += userCode;
 
         // If the code is valid, set testConditions.valid to true - see [jscene-iframe.js
         // for more information on this
-        s += "\n    testConditions.valid = true;\n} catch(e) {  }\n";
+        s += "\n    testConditions.valid = true;\n";
+        s += "\n} catch(e) {";
+        s += "\n    console.log(\"ERROR PARSING\");";
+        s += "\n    console.log(e);";
+        s += "\n}\n";
+
+        s += "\nfor(var i = 0; i < birds; i++) {"
+          +  "\n    drawBird(i);"
+          +  "\n}"
+          +  "\ntestConditions.birds = birds;";
 
         // When the iframe loads, it should call the repaint listener and tell
         // the code in jscene.js "hey, here are the test conditions" so that
@@ -170,147 +183,7 @@ $(function() {
         });
     }
 
-    // Define a set of exercices in a JSONish format (it's JSON but it has comments!)
-    // These are the jobs that the user must do and the criteria to progress through them
-    var exercices = [{
-        // An exercise - can the user delete all the code?
-        // Set the title of this exercise
-        title: 'A fresh start',
-        // Set the text that comes up when this exercise is in play
-        helpText: '<div class="alert alert-success">Can you delete all the code in the box on the right?</div>',
-        // Set the sample code to show for this exercise
-        sampleCode: "// no code needed! Simply clear out the code in the box on the right\n",
-        // Set a function to be run to check whether this exercise has been completed.
-        // If this function returns true, then we can pass on to the next exercise!
-        testConditions: function(config) {
-            return config.ballInSky === null
-                && config.timeOfDay === 'day';
-        }
-    }, {
-        // An exercise - this one tests to see if the user can make the sun shine
-        title: 'Sun shine',
-        helpText: '<div class="alert alert-success">Can you show the sun?</div>'
-        +  '<div class="alert alert-info">You can show the sun by calling the <span class="inlineCode">showSun</span> function that has already been defined for you.</div>',
-        sampleCode: "// show the sun\nshowSun();\n",
-        testConditions: function(config) {
-            return config.ballInSky === 'yellow'
-                && config.timeOfDay === 'day';
-        }
-    },{
-        // An exercise - this one tests to see if the user can show the moon
-        title: 'Moon time!',
-        helpText: '<div class="alert alert-success">Can you show the moon?</div>'
-            + '<div class="alert alert-info">You can show the moon by calling the <span class="inlineCode">showMoon</span> function that has already been defined for you.</div>'
-            + '<div class="alert alert-warning">Notice that if you call <span class="inlineCode">showMoon();</span> after other functions, it can draw over the top of what\'s underneath! This is due to the order that the code is executed in, so put it at the top of your code.</div>',
-        sampleCode: "// show the sun\nshowMoon();\n",
-        testConditions: function(config) {
-            return config.ballInSky === 'lightgray'
-                && config.timeOfDay === 'day';
-        }
-    },{
-        // An exercise - this one tests to see if the user can show green sunshine
-        // by editing parameters of a function
-        title: 'Green sunshine',
-        helpText: '<div class="alert alert-success">Can you turn the sun green?</div>'
-                + '<div class="alert alert-info">The functions <span class="inlineCode">showSun</span> and <span class="inlineCode">showMoon</span> are'
-                + ' actually a <b>wrapper</b> around the function <span class="inlineCode">showBallInSky</span> that passes a <b>parameter</b> in to tell it what colour to draw the ball. You could make the sun any colour you like! Wrapper functions are great for <b>composing functionality</b> - making something complicated out of lots of simple things.'
-                + '</div>',
-        sampleCode: "// show a red ball\nshowBallInSky('red');\n",
-        testConditions: function(config) {
-            return config.ballInSky === 'green'
-                && config.timeOfDay === 'day';
-        }
-    },{
-        // An exercise - this one tests to see if the user can show plant a tree
-        // at a certain location
-        title: 'Plant a tree',
-        helpText: '<div class="alert alert-success">Can you plan a tree 100 pixels from the left and 200 pixels from the top?</div>'
-            + '<div class="alert alert-info">You can plant a tree by <b>calling</b> the <b class="inlineCode">plantTree</b> function. You can tell the computer WHERE to plant the tree by using the parameters of plantTree.<br/><br/>The first parameter is how many pixels from the LEFT of the screen. The second parameter is how many pixels from the TOP of the screen (Cartesian co-ordinates).</div>',
-        sampleCode: "// plant a tree 130 pixels from the left\n// and 100 pixels from the top\nplantTree(130, 100);\n",
-        testConditions: function(config) {
-            return config.treesPlanted > 0 && config.treePlantedAt100200;
-        }
-    },{
-        // An exercise - this one tests to see if the user can show plant 5 trees
-        // by calling a function multiple times
-        title: 'Plant 5 trees',
-        helpText: '<div class="alert alert-success">Can you plant 5 trees?</div>'
-            + '<div class="alert alert-info">The function <span class="inlineCode">plantTree</span>'
-                    + ' take two <b>arguments</b> also known as <b>parameters</b>. They are both <b>integers</b> which means "whole numbers". You can plant as many as you like - the function can be called as often as you want.'
-                    + ' </div>',
-        sampleCode: "plantTree(40, 150);\nplantTree(20, 170);\nplantTree(240, 110);\n",
-        testConditions: function(config) {
-            return config.treesPlanted === 5;
-        }
-    },{
-        // An exercise - can the user draw multiple trees in a loop?
-        title: 'Loopy for trees',
-        helpText: '<div class="alert alert-success">Can you plant 10 trees using a loop?</div>'
-                + '<div class="alert alert-info">You can use a <span class="inlineCode">for</span> loop and a little bit of simple maths to draw a row of trees.'
-                +  '</div>',
-        sampleCode: "// plant a row of trees"
-                + "\nvar treesToPlant = 4;"
-                + "\nfor (var i = 0; i < treesToPlant; i++) {"
-                + "\n    var left = (i * (SCREEN_WIDTH / treesToPlant));"
-                + "\n    plantTree(left, 180)"
-                + "\n}\n",
-        testConditions: function(config) {
-            // Note that the test conditions are not sophisticated enough to truly
-            // detect that a loop has been used. In the interests of keeping the code
-            // light, we didn't go too far with that
-            return config.treesPlanted === 10;
-        }
-    },{
-        // An exercise - can the user employ and adjust randomness?
-        title: 'Random trees',
-        helpText: '<div class="alert alert-success">Can you work out how to make tree placement more random?</div>'
-                    + '<div class="alert alert-info">We use a <b>constant</b>, <span class="inlineCode">SCREEN_WIDTH</span>, so we don\'t have to write \'400\' every time we want to specify the width of the viewport. This is called <b>avoiding magic numbers</b> - magic is not good in programming! We like things to be clear!<br/><br/>'
-                    + ' You could try doing a few things like adjust the number of trees to plant, or'
-                    + ' adjusting the distance of each tree from the top. Here, we\'ve randomised them.',
-        sampleCode: "// plant a row of trees"
-                    + "\nvar treesToPlant = 7;"
-                    + "\nvar randomness = 30;"
-                    + "\nfor (var i = 0; i < treesToPlant; i++) {"
-                    + "\n    var left = (i * (SCREEN_WIDTH / treesToPlant));"
-                    + "\n    plantTree(left, 150 + Math.floor(Math.random() * randomness));"
-                    + "\n}\n",
-        testConditions: function(config) {
-            // Note that the test conditions are not sophisticated enough to truly
-            // detect that randomness has been used. In the interests of keeping the code
-            // light, we didn't go too far with that
-            return config.treesPlanted === 7;
-        }
-    },{
-        // An exercise - can the user make it night time?
-        title: 'Make it night time!',
-        helpText: '<div class="alert alert-success">Can you make it dark?</div>'
-            + '<div class="alert alert-info"> You can make it night time by <b>calling</b> the <b>function</b> <span class="inlineCode">setTimeOfDay</span> and <b>passing in</b> the <b>parameter</b> \'night\'.</div>'
-            + '<div class="alert alert-warning">You need to make sure that <span class="inlinecode">setTimeOfDay</span> is <b>called</b>'
-            + ' before any other code, otherwise it could end up being displayed on top of trees!'
-            + ' This is because code <b>executes</b> in the order it is written in.</div>',
-        sampleCode: "// Make it night time\nsetTimeOfDay('night');\n",
-        testConditions: function(config) {
-            return config.timeOfDay === 'night';
-        }
-    },{
-        // Free play - let the user loose on Canvas!
-        title: 'Using Canvas',
-        helpText: '<div class="alert alert-success">Can you change the colours? Can you add more colour stops?</div>'
-            + '<div class="alert alert-info">Under the hood, the <span class="inlineCode">setTimeOfDay</span> function'
-            + ' uses something called the <a target="_BLANK" href="http://www.html5canvastutorials.com/">canvas</a>.'
-            + ' You can draw onto this canvas in a variety of ways!<br/><br/>Get your Google on and work out how to change the sky colour gradients! You can draw anything on a Canvas!</div>',
-        sampleCode: "var grad = context.createLinearGradient(0, 0, 0, SCREEN_HEIGHT);"
-                    + "\ngrad.addColorStop(0, 'red');"
-                    + "\ngrad.addColorStop(0.2, 'orange');"
-                    + "\ngrad.addColorStop(0.5, 'white');"
-                    + "\ngrad.addColorStop(0.8, 'orange');"
-                    + "\ngrad.addColorStop(1, 'red');"
-                    + "\ncontext.fillStyle = grad;"
-                    + "\ncontext.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);\n",
-        testConditions: function(config) {
-            return false; // this is the final test
-        }
-    }];
+    var exercices = window.jscene.exercises;
 
     // number that refers to the position in the exercies array that the user
     // is currently on
@@ -390,13 +263,35 @@ $(function() {
         }
     }
 
+
+    // collection of things the user has used - functions, code snippets, etc -
+    // for easy referencing
+
+    var thingsUsed = [];
+
     // Function that advances the exercise the user is looking at. Symmetric to prevExercise
 
     /**
-     * advance the exercise the user is looking at. Symmetric to prevExercise
+     * advance the exercise the user is looking at. Symmetric to prevExercise.
      * @returns {null}
      */
     function nextExercise() {
+        if(exercisePtr > 0) {
+            var config = exercices[exercisePtr];
+            thingsUsed[exercisePtr] = config.completionNotes;
+
+            var s = "";
+            for (var i = 0; i < thingsUsed.length; i++) {
+                if(thingsUsed[i] !== null && thingsUsed[i] !== undefined) {
+                    s += "<pre class='thingUsed'>"  + thingsUsed[i] + '</pre>';
+                }
+            }
+            $('#thingsUsed').html(s);
+            if(thingsUsed.length > 1) {
+                $('#thingsUsedWrapper').fadeIn('slow');
+            }
+        }
+
         // If we're not at the end of the exercise list, then go to the next
         // exercise
         if(exercisePtr < (exercices.length - 1)) {
@@ -508,9 +403,8 @@ $(function() {
         }
     };
 
-
     // Make the nextTip function globally accessible. This is useful for debugging
     // so, for example, you can call nextTip(); in the browser console to skip
     // an exercise.
-    window.nextTip = nextExercise;
+    window.nextEx = nextExercise;
 });

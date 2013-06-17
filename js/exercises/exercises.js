@@ -119,6 +119,7 @@ window.jscene.exercises = [{
                 + ' adjusting the distance of each tree from the top. Here, we\'ve randomised them.',
     sampleCode: "var treesToPlant = 7;"
                 + "\nvar randomness = 30;"
+                + "\nvar i = 0;"
                 + "\nwhile (i < treesToPlant) {"
                 + "\n    var left = i * (SCREEN_WIDTH / treesToPlant);"
                 + "\n    tree(left, 150 + Math.floor(Math.random() * randomness));"

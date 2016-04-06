@@ -81,19 +81,23 @@ $(function() {
               + "  <script type=\"text/javascript\">";
 
         }
-        s += "var birds = 0;"
+        s += "var birds = 0;\n"
+          +  "var userCode = function() {};"
           +  "try {\n"
+          +  "    userCode = function () {\n"
         ;
 
         // Add the user's javascript to our variable
         s += userCode;
+        s +=  "\n    };\n";
 
         // If the code is valid, set testConditions.valid to true - see [jscene-iframe.js
         // for more information on this
+        s += "\n    userCode();\n";
         s += "\n    testConditions.valid = true;\n";
         s += "\n} catch(e) {";
-        s += "\n    console.log(\"ERROR PARSING\");";
-        s += "\n    console.log(e);";
+        s += "\n    // console.log(\"ERROR PARSING\");";
+        s += "\n    // console.log(e);";
         s += "\n}\n";
 
         s += "\nfor(var i = 0; i < birds; i++) {"
@@ -184,7 +188,7 @@ $(function() {
         });
     }
 
-    var exercices = window.jscene.exercises;
+    var exercises = window.jscene.exercises;
 
     // number that refers to the position in the exercies array that the user
     // is currently on
@@ -216,7 +220,7 @@ $(function() {
     function updateExercise() {
 
         // get the configuration of the current exercise
-        var config = exercices[exercisePtr];
+        var config = exercises[exercisePtr];
 
         // draw the current exercise
         showInHelpBox(function() {
@@ -233,7 +237,7 @@ $(function() {
         });
 
         // Update the progress bar
-        var perc = (100 * exercisePtr/(exercices.length - 1));
+        var perc = (100 * exercisePtr/(exercises.length - 1));
         $('.bar').css('width', perc + '%');
 
         // Check to see if the user finished all the exercises
@@ -278,7 +282,7 @@ $(function() {
      */
     function nextExercise() {
         if(exercisePtr > 0) {
-            var config = exercices[exercisePtr];
+            var config = exercises[exercisePtr];
             thingsUsed[exercisePtr] = config.completionNotes;
 
             var s = "";
@@ -295,7 +299,7 @@ $(function() {
 
         // If we're not at the end of the exercise list, then go to the next
         // exercise
-        if(exercisePtr < (exercices.length - 1)) {
+        if(exercisePtr < (exercises.length - 1)) {
             ++exercisePtr;
         }
         updateExercise();
@@ -392,14 +396,23 @@ $(function() {
 
         // If the code the user has entered isn't valid, simply show the code
         // invalid badge and do nothing.
+
+        if(exercises[exercisePtr].unitTest) {
+            var previewFrame = document.getElementById('preview');
+            previewFrame.contentWindow.runUnitTest(exercises[exercisePtr].unitTest);
+        }
+
         if(!testConditions.valid) {
             $('#code-valid').hide();
             $('#code-invalid').show();
             return;
         }
+        if(!testConditions.passedTests) {
+            return;
+        }
 
         // If the user has passed the test, then advance to the next tip.
-        if(exercices[exercisePtr].testConditions(testConditions)) {
+        if(exercises[exercisePtr].testConditions(testConditions)) {
             nextExercise();
         }
     };

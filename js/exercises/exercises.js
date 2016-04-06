@@ -55,12 +55,53 @@ window.jscene.exercises = [{
     },
     completionNotes: 'orb(\'green\');'
 },{
+    // An exercise - can the user make it night time?
+    title: 'Make it night time!',
+    helpText: '<div class="alert alert-success">Can you make it dark?</div>'
+        + '<div class="alert alert-info"> You can make it night time by using the <b>function</b> <span class="inlineCode">settime</span> and using the <b>parameter</b> \'night\'.</div>'
+        + '<div class="alert alert-warning">You need to make sure that <span class="inlinecode">settime</span> is used'
+        + ' before any other code, otherwise it could end up being displayed on top of trees!'
+        + ' This is because code runs in the order it is written in.</div>',
+    sampleCode: "settime('night');\n",
+    testConditions: function(config) {
+        return config.timeOfDay === 'night';
+    },
+    completionNotes: "settime('night');"
+},{
+    // An exercise
+    title: 'Ifs and buts',
+    helpText: '<div class="alert alert-success">Can you write code that makes a decision?</div>'
+            + '<div class="alert alert-info">If it\'s day time, show the sun. If it\'s night time, show the moon!</div>'
+            + '<div class="alert alert-warning">The sample code NEARLY works, you just have to change one thing... Can you solve it?</div>',
+    sampleCode: "if (gettime() == 'day') moon();\n"
+             +  "if (gettime() == 'night') moon();\n",
+    testConditions: function(config) {
+        return true;
+    },
+    completionNotes: 'var birds = 5;',
+
+    // TODO would it be possible to get this into code rather than eval'd?
+    unitTest: "var ori = testConditions.timeOfDay;"
+         + "\nblockTimeChanges = true;"
+         + "\ntestConditions.timeOfDay = 'night';"
+         + "\nuserCode();\n"
+         + "\nif (testConditions.orb !== 'lightgray') {"
+         + "\n    success = false;"
+         + "\n}\n"
+         + "\ntestConditions.timeOfDay = 'day';"
+         + "\nuserCode();\n"
+         + "\nif (testConditions.orb !== 'yellow') {"
+         + "\n    success = false;"
+         + "\n}\n"
+         + "\ntestConditions.timeOfDay = ori;"
+         + "\nuserCode();\n"
+},{
     // An exercise
     title: 'Variable birds',
     helpText: '<div class="alert alert-success">Can you show 5 birds?</div>'
             + '<div class="alert alert-info">The variable <span class="inlineCode">birds</span> sets how many birds to show. You can show up to 6 birds.'
             + '</div>',
-    sampleCode: "var birds = 3;\n",
+    sampleCode: "birds = 3;",
     testConditions: function(config) {
         return config.birds === 5;
     },
@@ -107,7 +148,7 @@ window.jscene.exercises = [{
         // Note that the test conditions are not sophisticated enough to truly
         // detect that a loop has been used. In the interests of keeping the code
         // light, we didn't go too far with that
-        return config.treesPlanted === 10;
+        return config.treesPlanted === 10 && config.treesPlantedInDifferentPlaces;
     },
     completionNotes: "\nwhile (i < treesToPlant) { }"
 },{
@@ -118,6 +159,7 @@ window.jscene.exercises = [{
                 + ' You could try doing a few things like adjust the number of trees to plant, or'
                 + ' adjusting the distance of each tree from the top. Here, we\'ve randomised them.',
     sampleCode: "var treesToPlant = 7;"
+                + "\nvar i = 0;"
                 + "\nvar randomness = 30;"
                 + "\nvar i = 0;"
                 + "\nwhile (i < treesToPlant) {"
@@ -132,19 +174,6 @@ window.jscene.exercises = [{
         return config.treesPlanted === 7;
     },
     completionNotes: 'Math.random()'
-},{
-    // An exercise - can the user make it night time?
-    title: 'Make it night time!',
-    helpText: '<div class="alert alert-success">Can you make it dark?</div>'
-        + '<div class="alert alert-info"> You can make it night time by using the <b>function</b> <span class="inlineCode">settime</span> and using the <b>parameter</b> \'night\'.</div>'
-        + '<div class="alert alert-warning">You need to make sure that <span class="inlinecode">settime</span> is used'
-        + ' before any other code, otherwise it could end up being displayed on top of trees!'
-        + ' This is because code runs in the order it is written in.</div>',
-    sampleCode: "settime('night');\n",
-    testConditions: function(config) {
-        return config.timeOfDay === 'night';
-    },
-    completionNotes: "settime('night');"
 },{
     // Free play - let the user loose on Canvas!
     title: 'Using Canvas',
